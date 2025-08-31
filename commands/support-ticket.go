@@ -277,23 +277,45 @@ func addMemberToThread(client *tempest.Client, threadID, userID tempest.Snowflak
 
 // Send the support ticket message to the specified thread
 func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake, user *tempest.User) error {
-	addMemberToThread(client, threadId, user.ID)
 	msg := tempest.Message{
-		Content: fmt.Sprintf(
-			"Hello %s! Please provide a screenshot of the login page with the usernames panel open. "+
-				"You need to click on the gear in the top left corner (see attached image for where to find that)! "+
-				"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
-				"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
-				"we get back to you.**\n\n"+
-				"This process will link your Pokerogue account with your discord, allowing you to log in without "+
-				"needing your password.\n"+
-				"We have no way to access, check, change, or reset your password. "+
-				"**NEVER** give out personal details such as passwords anywhere, including in these threads.**\n\n",
-			user.Mention(),
-		),
+		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
+		Components: []tempest.LayoutComponent{
+			tempest.ContainerComponent{
+				Type: tempest.CONTAINER_COMPONENT_TYPE,
+				Components: []tempest.AnyComponent{
+					tempest.TextDisplayComponent{
+						Type: tempest.TEXT_DISPLAY_COMPONENT_TYPE,
+						Content: fmt.Sprintf(
+							"Hello %s! Please provide a screenshot of the login page with the usernames panel open. "+
+								"You need to click on the gear in the top left corner (see attached image for where to find that)! "+
+								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
+								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
+								"we get back to you.**\n\n"+
+								"This process will link your Pokerogue account with your discord, allowing you to log in without "+
+								"needing your password.\n"+
+								"We have no way to access, check, change, or reset your password. "+
+								"**NEVER** give out personal details such as passwords anywhere, including in these threads.",
+							user.Mention(),
+						),
+					},
+					tempest.MediaGalleryComponent{
+						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
+						Items: []tempest.MediaGalleryItem{{
+							Media: tempest.UnfurledMediaItem{
+								URL: "https://cdn.discordapp.com/attachments/1365035899821494282/1411412105789440193/resources_username-panel-location.png",
+							},
+							Description: "Image showing the location of the usernames panel",
+						}},
+					},
+					tempest.TextDisplayComponent{
+						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
+						Content: fmt.Sprintf("<@&%d>! Please help with the password reset request.", constants.HELPER_ROLE_ID),
+					},
+				},
+			},
+		},
 	}
 	_, err := client.SendMessage(threadId, msg, nil)
-	_, err = client.SendLinearMessage(threadId, fmt.Sprintf("<@&%d>! Please help with the password reset request.", constants.HELPER_ROLE_ID))
 	return err
 }
 
@@ -308,16 +330,5 @@ func closeTicketThread(client *tempest.Client, threadID tempest.Snowflake) error
 		return err
 	}
 	err = ticketune_db.GetDB().CloseThread(threadID)
-	return err
-}
-
-func sendSupportInstructionMessage(client *tempest.Client, channelID tempest.Snowflake, userID tempest.Snowflake) error {
-	msg := tempest.Message{
-		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
-		Mentions: []tempest.User{{
-			ID: userID,
-		}},
-	}
-	_, err := client.SendMessage(channelID, msg, nil)
 	return err
 }
