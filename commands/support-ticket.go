@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"ticketune-bot/constants"
 	ticketuneTypes "ticketune-bot/discord-types"
 	ticketune_db "ticketune-bot/ticketune-db"
@@ -196,6 +197,13 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 		log.Println("failed to save thread to database", err)
 	}
 
+	// Give the user permission to view and send messages in threads in the ticket channel
+	err = giveUserTicketChannelPerms(itx.Client, userID)
+	if err != nil {
+		log.Println("failed to give user ticket channel perms", err)
+		acknowledgeErrorMessage(&itx, couldNotAddToThread)
+	}
+
 	// Add the user to the thread
 	err = addMemberToThread(itx.Client, threadID, userID)
 	// An error here generally means the bot has insufficient permissions to add the user to the thread
@@ -320,7 +328,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 }
 
 func closeTicketThread(client *tempest.Client, threadID tempest.Snowflake) error {
-	// Delete the thread, and then purge from the database any record of it
+	// Purge the thread from any database record thing
 	_, err := client.Rest.Request(
 		http.MethodDelete,
 		fmt.Sprintf("/channels/%d", threadID),
@@ -331,4 +339,26 @@ func closeTicketThread(client *tempest.Client, threadID tempest.Snowflake) error
 	}
 	err = ticketune_db.GetDB().CloseThread(threadID)
 	return err
+}
+
+// Give the user ID permissions to view, send messages in threads, and read message history in the ticket channel
+func giveUserTicketChannelPerms(client *tempest.Client, userID tempest.Snowflake) (err error) {
+	_, err = client.Rest.Request(
+		http.MethodPut,
+		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),
+		ticketuneTypes.EditChannelPermissionsParams{
+			Allow: strconv.FormatUint(uint64(tempest.SEND_MESSAGES_IN_THREADS_PERMISSION_FLAG|tempest.VIEW_CHANNEL_PERMISSION_FLAG|tempest.READ_MESSAGE_HISTORY_PERMISSION_FLAG), 10),
+		},
+	)
+	return
+}
+
+// Remove permission overrides for the user in the ticket channel
+func deleteChannelPermissionForUser(client *tempest.Client, userID tempest.Snowflake) (err error) {
+	_, err = client.Rest.Request(
+		http.MethodDelete,
+		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),
+		nil,
+	)
+	return
 }

@@ -27,8 +27,8 @@ func main() {
 		PublicKey: os.Getenv("DISCORD_PUBLIC_KEY"),
 	})
 
-	addr := os.Getenv("DISCORD_APP_ADDRESS")
-	testServerID, err := tempest.StringToSnowflake(os.Getenv("DISCORD_TEST_SERVER_ID"))
+	addr := os.Getenv("LISTENING_ADDRESS")
+	testServerID, err := tempest.StringToSnowflake(os.Getenv("DISCORD_GUILD_ID"))
 	if err != nil {
 		log.Fatalln("failed to parse env variable to snowflake", err)
 	}

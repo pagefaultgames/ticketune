@@ -83,3 +83,16 @@ type ThreadMember struct {
 	JoinTimestamp time.Time         `json:"join_timestamp"`    // Time the user last joined the thread
 	// Flags         int               `json:"flags"`             // Any user-thread settings, currently only used for notifications
 }
+
+type ROLE_OR_MEMBER uint8 // Values for the `type` field in EditChannelPermissionsParams
+
+const (
+	ROLE_TYPE   ROLE_OR_MEMBER = 0
+	MEMBER_TYPE ROLE_OR_MEMBER = 1
+)
+
+type EditChannelPermissionsParams struct {
+	Allow string                  `json:"allow,string,omitempty"` // bitwise value of allowed permissions
+	Deny  tempest.PermissionFlags `json:"deny,string,omitempty"`  // bitwise value of denied permissions
+	Type  ROLE_OR_MEMBER          `json:"type"`                   // 1 for role or 2 for member
+}
