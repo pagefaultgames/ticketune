@@ -8,13 +8,10 @@ import (
 	command "ticketune-bot/commands"
 	ticketune_db "ticketune-bot/ticketune-db"
 
-	"ticketune-bot/constants"
-
 	tempest "github.com/amatsagu/tempest"
 )
 
 func main() {
-	constants.InitConstants()
 	// open (or create) the database
 	log.Println("Initializing the database...")
 	if err := ticketune_db.InitDB(); err != nil {
@@ -28,7 +25,7 @@ func main() {
 	})
 
 	addr := os.Getenv("LISTENING_ADDRESS")
-	testServerID, err := tempest.StringToSnowflake(os.Getenv("DISCORD_GUILD_ID"))
+	guildID, err := tempest.StringToSnowflake(os.Getenv("DISCORD_GUILD_ID"))
 	if err != nil {
 		log.Fatalln("failed to parse env variable to snowflake", err)
 	}
@@ -37,8 +34,13 @@ func main() {
 	client.RegisterCommand(command.PingCommand)
 	client.RegisterCommand(command.CreateSupportTicketCommand)
 	client.RegisterComponent([]string{"open-ticket-button"}, command.OpenTicketButtonCallback)
+	client.RegisterCommand(command.GetUserTicketCommand)
+	client.RegisterCommand(command.CloseCommand)
+	client.RegisterCommand(command.TryDiscordCommand)
+	client.RegisterCommand(command.NoSaveCommmand)
+	client.RegisterCommand(command.RequestPanelCommand)
 
-	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{testServerID}, nil, false)
+	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
 		log.Fatalln("failed to sync local commands storage with Discord API", err)
 	}

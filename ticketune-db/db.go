@@ -3,7 +3,6 @@ package ticketune_db
 import (
 	"database/sql"
 	"log"
-	"time"
 
 	"github.com/amatsagu/tempest"
 	_ "github.com/mattn/go-sqlite3"
@@ -56,20 +55,6 @@ func openDB() (*DB, error) {
 	}
 	ticketuneDB := &DB{db: db}
 
-	// Start cleanup goroutine: every 2 days, delete threads older than 1 month
-	stop := make(chan struct{})
-	go func() {
-		ticker := time.NewTicker(48 * time.Hour)
-		defer ticker.Stop()
-		for {
-			select {
-			case <-ticker.C:
-				ticketuneDB.CleanupOldThreads()
-			case <-stop:
-				return
-			}
-		}
-	}()
 	return ticketuneDB, nil
 }
 
@@ -93,6 +78,16 @@ func (d *DB) GetUserThread(userID tempest.Snowflake) (threadID tempest.Snowflake
 	return
 }
 
+// GetThreadUser returns the user ID associated with a thread ID.
+func (d *DB) GetThreadUser(threadID tempest.Snowflake) (userID tempest.Snowflake, err error) {
+	row := d.db.QueryRow(
+		`SELECT user_id FROM support_tickets WHERE thread_id = ?`,
+		threadID,
+	)
+	err = row.Scan(&userID)
+	return
+}
+
 // DeleteUserThread removes a user's thread record.
 func (d *DB) DeleteUserThread(userID string) error {
 	_, err := d.db.Exec(`DELETE FROM support_tickets WHERE user_id = ?`, userID)
@@ -104,15 +99,16 @@ func (d *DB) Close() error {
 	return d.db.Close()
 }
 
-// DeleteThreadsOlderThan deletes threads older than 1 month
-// Called automatically every 2 days by a goroutine
+// Cleanup threads older than 1 month.
+// Unused in favor of explicit thread closing, but kept for potential future use.
 func (d *DB) CleanupOldThreads() error {
 	_, err := d.db.Exec(`DELETE FROM support_tickets WHERE created_at < datetime('now', '-1 month')`)
 	return err
 }
 
-// Delete a thread record by thread ID
-func (d *DB) CloseThread(threadId tempest.Snowflake) error {
-	_, err := d.db.Exec(`DELETE FROM support_tickets WHERE thread_id = ?`, threadId)
-	return err
+// Delete a thread record by thread ID, and return the user ID that was associated with it.
+func (d *DB) CloseThread(threadId tempest.Snowflake) (userID tempest.Snowflake, err error) {
+	row := d.db.QueryRow(`DELETE FROM support_tickets WHERE thread_id = ? RETURNING user_id`, threadId)
+	err = row.Scan(&userID)
+	return
 }

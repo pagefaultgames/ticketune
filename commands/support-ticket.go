@@ -9,6 +9,7 @@ import (
 	"ticketune-bot/constants"
 	ticketuneTypes "ticketune-bot/discord-types"
 	ticketune_db "ticketune-bot/ticketune-db"
+	utils "ticketune-bot/utils"
 
 	tempest "github.com/amatsagu/tempest"
 )
@@ -73,8 +74,11 @@ var CreateSupportTicketCommand tempest.Command = tempest.Command{
 	Description:         "Send a message with an Open Ticket button to the specified channel",
 	SlashCommandHandler: supportTicketCmdImpl,
 	// By default, only let admins use the command.
+	// This is not a hard restriction imposed by the bot, but is simply the permission level
+	// that shows up in the Discord UI. Guild admins can tweak this command to allow other roles to use it.
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
+	GuildID:             constants.DISCORD_GUILD_ID,
 	Options: []tempest.CommandOption{{
 		Type:         tempest.CHANNEL_OPTION_TYPE,
 		Name:         "channel",
@@ -82,21 +86,6 @@ var CreateSupportTicketCommand tempest.Command = tempest.Command{
 		Required:     true,
 		ChannelTypes: []tempest.ChannelType{tempest.GUILD_TEXT_CHANNEL_TYPE},
 	}},
-}
-
-func getChannelFromID(client *tempest.Client, cid tempest.Snowflake) (channel ticketuneTypes.Channel, err error) {
-	response, err := client.Rest.Request(
-		http.MethodGet,
-		fmt.Sprintf("/channels/%d", cid),
-		nil,
-	)
-
-	if err != nil {
-		return
-	}
-
-	err = json.Unmarshal(response, &channel)
-	return
 }
 
 // Return whether the user is a member of the thread
@@ -108,24 +97,24 @@ func checkIfUserIsMemberOfThread(client *tempest.Client, threadID, userID tempes
 		nil,
 	)
 	// Request will return 404 if user is not a member of the thread
-	return err != nil
+	return err == nil
 }
 
 // Return whether there is an open, non-locked ticket for the user
 func checkIfOpenTicketExists(client *tempest.Client, userID tempest.Snowflake) (exists bool, threadID tempest.Snowflake, err error) {
 	// Get the thread ID from the database
 	tid, err := ticketune_db.GetDB().GetUserThread(userID)
-	if err != sql.ErrNoRows || tid == 0 {
+	if err == sql.ErrNoRows || tid == 0 {
 		return false, 0, nil
 	} else if err != nil {
-		log.Println("Error when accessing database", err)
 		return
 	}
 
 	// Check if the thread still exists
-	channel, err := getChannelFromID(client, tid)
-	// err being nil means the channel does not exist. That's OK
-	if err == nil {
+	channel, err := utils.GetChannelFromID(client, tid)
+	// If error is not nil, either channel does not exist, or we couldn't unmarshal the response
+	// in either case, proceed as though there is no existing ticket
+	if err != nil {
 		return false, 0, nil
 	}
 
@@ -142,6 +131,7 @@ func checkIfOpenTicketExists(client *tempest.Client, userID tempest.Snowflake) (
 	return true, tid, nil
 }
 
+// Respond to the interaction with an ephemeral message containing the link to the created thread
 func sendAlreadyCreatedTicketMessage(itx *tempest.ComponentInteraction, threadID tempest.Snowflake) (err error) {
 	err = itx.AcknowledgeWithMessage(tempest.ResponseMessageData{
 		Content: fmt.Sprintf("I found an existing ticket, try using this: <#%d>", threadID),
@@ -150,18 +140,28 @@ func sendAlreadyCreatedTicketMessage(itx *tempest.ComponentInteraction, threadID
 }
 
 // "I was unable to create your support ticket. Please try again..."
-var couldNotCreateThread string = "I was unable to create your support ticket. Please try again.\n" +
-	fmt.Sprintf("If this issue persists, please reach out to someone in <#%d>", constants.BOT_TROUBLESHOOTING_CHANNEL_ID)
+var couldNotCreateThread string = fmt.Sprintf(
+	"I was unable to create your support ticket. Please try again.\n"+
+		"If this issue persists, please reach out to someone in <#%d>.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
+)
 
 // "I was unable to add you to the support ticket..."
-var couldNotAddToThread string = fmt.Sprintf("I created support thread, but something went wrong while trying to give you access to it."+
-	"Please reach out to someone in <#%d> for help.", constants.BOT_TROUBLESHOOTING_CHANNEL_ID)
+var couldNotAddToThread string = fmt.Sprintf(
+	"I created support thread, but something went wrong while trying to give you access to it. "+
+		"Please reach out to someone in <#%d> for help, and mention that I was unable to give you access to your password reset ticket.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
+)
 
-var couldNotSendInstruction string = "I created your support ticket and added you to it" +
-	"but something went wrong while trying to send the instructions. Please respond in the thread mentioning the error"
+// "something went wrong while trying to send the instructions..."
+var couldNotSendInstruction string = fmt.Sprintf(
+	"I created your support ticket and added you to it, "+
+		"but something went wrong while trying to send the instructions. Please reach out to someone in <#%d>, and mention that I could not send the instructions.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID)
 
+// "Something went wrong, I couldn't get your user ID..."
 var couldNotGetUserID string = fmt.Sprintf(
-	"Something went wrong, I couldn't get your user ID. Please try again, and if the issue persists, reach out to someone in <#%d>",
+	"Something went wrong, I couldn't get your user ID. Please try again, and if the issue persists, reach out to someone in <#%d>.",
 	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
 )
 
@@ -182,8 +182,10 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 	}
 	var user = itx.Member.User
 	var userID = user.ID
-	exists, tid, err := checkIfOpenTicketExists(itx.Client, userID)
-	if err != nil && exists {
+	// Discard any errors from checkIfOpenTicketExists, proceeding as though no ticket
+	// exists.
+	exists, tid, _ := checkIfOpenTicketExists(itx.Client, userID)
+	if exists {
 		sendAlreadyCreatedTicketMessage(&itx, tid)
 		return
 	}
@@ -223,6 +225,9 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 	err = sendPostTicketCreatedMessage(&itx, threadID)
 
 	if err != nil {
+		// This code path means that the bot was not able to reply with a simple message.
+		// There's nothing we can do to communicate with the user, but they would have still had a ticket opened.
+		// Proceed to try to send the instructions message, but log the error
 		log.Println("failed to send post ticket created message", err)
 
 	}
@@ -232,14 +237,6 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 	if err != nil {
 		log.Println("failed to send instruction message", err)
 		acknowledgeErrorMessage(&itx, couldNotSendInstruction)
-	}
-
-	// Send the initial instruction message to the thread,
-	// and add the user to the thread.
-
-	if err != nil {
-		log.Println("failed to acknowledge static component", err)
-		return
 	}
 }
 
@@ -301,7 +298,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 					tempest.TextDisplayComponent{
 						Type: tempest.TEXT_DISPLAY_COMPONENT_TYPE,
 						Content: fmt.Sprintf(
-							"Hello %s! Please provide a screenshot of the login page with the usernames panel open. "+
+							"Hello %s! Please provide a screenshot of the login page __with the usernames panel open__. "+
 								"You need to click on the gear in the top left corner (see attached image for where to find that)! "+
 								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
 								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
@@ -334,20 +331,6 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 	return err
 }
 
-func closeTicketThread(client *tempest.Client, threadID tempest.Snowflake) error {
-	// Purge the thread from any database record thing
-	_, err := client.Rest.Request(
-		http.MethodDelete,
-		fmt.Sprintf("/channels/%d", threadID),
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-	err = ticketune_db.GetDB().CloseThread(threadID)
-	return err
-}
-
 // Give the user ID permissions to view, send messages in threads, and read message history in the ticket channel
 func giveUserTicketChannelPerms(client *tempest.Client, userID tempest.Snowflake) (err error) {
 	_, err = client.Rest.Request(
@@ -357,16 +340,6 @@ func giveUserTicketChannelPerms(client *tempest.Client, userID tempest.Snowflake
 			Allow: tempest.SEND_MESSAGES_IN_THREADS_PERMISSION_FLAG | tempest.VIEW_CHANNEL_PERMISSION_FLAG | tempest.READ_MESSAGE_HISTORY_PERMISSION_FLAG,
 			Type:  ticketuneTypes.MEMBER_TYPE,
 		},
-	)
-	return
-}
-
-// Remove permission overrides for the user in the ticket channel
-func deleteChannelPermissionForUser(client *tempest.Client, userID tempest.Snowflake) (err error) {
-	_, err = client.Rest.Request(
-		http.MethodDelete,
-		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),
-		nil,
 	)
 	return
 }

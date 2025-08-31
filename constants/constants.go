@@ -12,10 +12,15 @@ var (
 	TICKET_CHANNEL_ID              tempest.Snowflake
 	SUPPORT_CATEGORY_ID            tempest.Snowflake
 	BOT_TROUBLESHOOTING_CHANNEL_ID tempest.Snowflake
+	DISCORD_GUILD_ID               tempest.Snowflake
 )
 
+// "I couldn't find a user associated with this thread in my database, so I can't ping them...."
+var COULD_NOT_FIND_USER_TO_PING string = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
+	"However, I've sent the requested message to the thread."
+
 // Initialize the constants from environment variables
-func InitConstants() {
+func init() {
 	log.Println("Loading environment variables...")
 	if err := godotenv.Load(".env"); err != nil {
 		log.Fatalln("failed to load env variables", err)
@@ -37,5 +42,9 @@ func InitConstants() {
 	BOT_TROUBLESHOOTING_CHANNEL_ID, err = tempest.EnvToSnowflake("BOT_TROUBLESHOOTING_CHANNEL_ID")
 	if err != nil {
 		log.Fatalln("failed to parse BOT_TROUBLESHOOTING_CHANNEL_ID variable to snowflake", err)
+	}
+	DISCORD_GUILD_ID, err = tempest.EnvToSnowflake("DISCORD_GUILD_ID")
+	if err != nil {
+		log.Fatalln("failed to parse DISCORD_GUILD_ID variable to snowflake", err)
 	}
 }
