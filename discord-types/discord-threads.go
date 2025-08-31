@@ -92,7 +92,7 @@ const (
 )
 
 type EditChannelPermissionsParams struct {
-	Allow string                  `json:"allow,string,omitempty"` // bitwise value of allowed permissions
+	Allow tempest.PermissionFlags `json:"allow,string,omitempty"` // bitwise value of allowed permissions
 	Deny  tempest.PermissionFlags `json:"deny,string,omitempty"`  // bitwise value of denied permissions
 	Type  ROLE_OR_MEMBER          `json:"type"`                   // 1 for role or 2 for member
 }

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"ticketune-bot/constants"
 	ticketuneTypes "ticketune-bot/discord-types"
 	ticketune_db "ticketune-bot/ticketune-db"
@@ -181,7 +180,7 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 		return
 	}
 
-	threadID, err := createThread(itx.Client, itx.ChannelID, fmt.Sprintf("Password Help - %s", user.Username))
+	threadID, err := createThread(itx.Client, constants.TICKET_CHANNEL_ID, fmt.Sprintf("Password Help - %s", user.Username))
 	if err != nil {
 		log.Println("failed to create thread", err)
 		// Notify the user that we failed to create the thread
@@ -347,7 +346,8 @@ func giveUserTicketChannelPerms(client *tempest.Client, userID tempest.Snowflake
 		http.MethodPut,
 		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),
 		ticketuneTypes.EditChannelPermissionsParams{
-			Allow: strconv.FormatUint(uint64(tempest.SEND_MESSAGES_IN_THREADS_PERMISSION_FLAG|tempest.VIEW_CHANNEL_PERMISSION_FLAG|tempest.READ_MESSAGE_HISTORY_PERMISSION_FLAG), 10),
+			Allow: tempest.SEND_MESSAGES_IN_THREADS_PERMISSION_FLAG | tempest.VIEW_CHANNEL_PERMISSION_FLAG | tempest.READ_MESSAGE_HISTORY_PERMISSION_FLAG,
+			Type:  ticketuneTypes.MEMBER_TYPE,
 		},
 	)
 	return
