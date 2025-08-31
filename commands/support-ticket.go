@@ -45,7 +45,15 @@ func supportTicketCmdImpl(itx *tempest.CommandInteraction) {
 			},
 		}}
 
-	_, err := itx.Client.SendMessage(itx.ChannelID, msg, nil)
+	channel, presence := itx.GetOptionValue("channel")
+	var channelID tempest.Snowflake
+	if !presence {
+		channelID = itx.ChannelID
+	} else {
+		channelID, _ = tempest.StringToSnowflake(channel.(string))
+	}
+
+	_, err := itx.Client.SendMessage(channelID, msg, nil)
 	if err != nil {
 		itx.SendReply(tempest.ResponseMessageData{
 			Content: "Failed to send ticket message" + err.Error(),
