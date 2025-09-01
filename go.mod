@@ -1,8 +1,6 @@
 module github.com/pagefaultgames/ticketune
 
-go 1.24.5
-
-toolchain go1.24.6
+go 1.25
 
 require (
 	github.com/amatsagu/tempest v1.3.1 // direct
