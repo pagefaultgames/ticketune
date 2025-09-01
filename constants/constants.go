@@ -22,7 +22,7 @@ const COULD_NOT_FIND_USER_TO_PING = "I couldn't find a user associated with this
 func init() {
 	var err error
 
-	HELPER_ROLE_ID, err = tempest.EnvToSnowflake("DISCORD_HELPER_ROLE_ID")
+	HELPER_ROLE_ID, err = tempest.EnvToSnowflake("HELPER_ROLE_ID")
 	if err != nil {
 		log.Fatal("failed to parse HELPER_ROLE_ID variable to snowflake", err)
 	}
