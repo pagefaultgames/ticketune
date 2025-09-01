@@ -1,24 +1,25 @@
-package command
+package commands
 
 import (
 	"database/sql"
 	"log"
 	"strconv"
-	utils "ticketune-bot/utils"
+
+	"github.com/pagefaultgames/ticketune-bot/utils"
 
 	"github.com/amatsagu/tempest"
 )
 
-const oldAccountCommandDescription string = "Notify the user that they are likely misremembering their username due to account inactivity"
-const oldAccountDefaultDescription string = "Notify the user the account has not been played for a long time"
-const oldAccountSpecificDescription string = "Notify the user the account has not been played for a specified amount of time"
+const oldAccountCommandDescription = "Notify the user that they are likely misremembering their username due to account inactivity"
+const oldAccountDefaultDescription = "Notify the user the account has not been played for a long time"
+const oldAccountSpecificDescription = "Notify the user the account has not been played for a specified amount of time"
 
-var OldAccountCommandGroup tempest.Command = tempest.Command{
+var OldAccountCommandGroup = tempest.Command{
 	Name:        "old-account",
 	Description: oldAccountCommandDescription,
 }
 
-var OldAccountDefault tempest.Command = tempest.Command{
+var OldAccountDefault = tempest.Command{
 	Name:                "default",
 	Description:         oldAccountDefaultDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
@@ -34,7 +35,7 @@ var OldAccountDefault tempest.Command = tempest.Command{
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-var OldAccountSpecific tempest.Command = tempest.Command{
+var OldAccountSpecific = tempest.Command{
 	Name:                "specific",
 	Description:         oldAccountSpecificDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
@@ -97,6 +98,7 @@ func defaultMessageWithUsername(username string) string {
 	if username == "" {
 		return "The account you provided" + defaultMessage
 	}
+
 	return "The account ``" + username + "``" + defaultMessage
 }
 
@@ -108,11 +110,13 @@ func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) {
 		if parseError != nil {
 			return
 		}
+
 		unit, parseError := utils.GetOption[string](itx, "unit", true)
 		if parseError != nil {
 			return
 		}
-		amount, parseError := utils.GetNumericOption[int](itx, "amount", false)
+
+		amount, _ := utils.GetNumericOption[int](itx, "amount", false)
 		// If there was a parse error, treat it as if they didn't provide the option, (default to "in a few [units]")
 		msg = buildMessage(username, amount, unit)
 	} else {
@@ -127,15 +131,12 @@ func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) {
 		return
 	}
 
-	threadID := itx.ChannelID
-
 	// The message to use to respond to the interaction
-	var responseMsg string
+	responseMsg := "The user has been notified."
 
-	if err == nil {
-		msg = "Hi <@" + userID.String() + ">!\n" + msg
-		responseMsg = "The user has been notified."
-	} else {
+	msg = "Hi <@" + userID.String() + ">!\n" + msg
+
+	if err != nil {
 		log.Println("Error fetching user for thread:", err)
 		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
 			"However, I've sent the message to the thread."
@@ -143,15 +144,13 @@ func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) {
 
 	// Send the user a message
 	_, err = itx.Client.SendLinearMessage(
-		threadID,
+		itx.ChannelID,
 		msg,
 	)
-
 	if err != nil {
 		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
 		return
 	}
 
 	itx.SendLinearReply(responseMsg, true)
-
 }

@@ -2,34 +2,37 @@ package utils
 
 import (
 	"errors"
-	ticketune_db "ticketune-bot/ticketune-db"
+
+	"github.com/pagefaultgames/ticketune-bot/db"
 
 	"github.com/amatsagu/tempest"
 )
 
 // Get the channel and user ID associated with a command interaction
 // Errors if the
-func GetUserFromThread(itx *tempest.CommandInteraction) (userID tempest.Snowflake, err error) {
+func GetUserFromThread(itx *tempest.CommandInteraction) (tempest.Snowflake, error) {
 	// If this is not a thread in the ticket channel, do nothing
 	channel, err := GetChannelFromID(itx.Client, itx.ChannelID)
 	if err != nil {
 		itx.SendLinearReply("Error fetching channel information", true)
-		return
+		return tempest.Snowflake(0), err
 	}
 
 	if !CheckIfPasswordTicketChannel(channel) {
 		itx.SendLinearReply("This command can only be used on a password ticket thread", true)
-		err = errors.New("not a password ticket thread")
+		return tempest.Snowflake(0), errors.New("not a password ticket thread")
 	}
 
-	threadID := itx.ChannelID
-	userID, err = ticketune_db.GetDB().GetThreadUser(threadID)
+	userID, err := db.Get().GetThreadUser(itx.ChannelID)
+	if err != nil {
+		return tempest.Snowflake(0), err
+	}
 
-	return
+	return userID, nil
 }
 
-var MissingOptionErr = errors.New("Option is missing")
-var WrongTypeErr = errors.New("Option is of the wrong type")
+var ErrMissingOption = errors.New("option is missing")
+var ErrWrongType = errors.New("option is of the wrong type")
 
 // A constraint that matches all numeric types
 type Numeric interface {
@@ -61,7 +64,8 @@ func GetNumericOption[T Numeric](itx *tempest.CommandInteraction, name string, s
 		if sendReply {
 			itx.SendLinearReply("Error: "+name+" is missing", true)
 		}
-		return res, MissingOptionErr
+
+		return res, ErrMissingOption
 	}
 
 	// Try direct type assertion first
@@ -69,6 +73,7 @@ func GetNumericOption[T Numeric](itx *tempest.CommandInteraction, name string, s
 	if ok {
 		return res, nil
 	}
+
 	// If float64, try conversion to numeric type
 	if t, ok := any(val).(float64); ok {
 		return ConvertFloat64ToNumeric[T](t), nil
@@ -79,8 +84,8 @@ func GetNumericOption[T Numeric](itx *tempest.CommandInteraction, name string, s
 	if sendReply {
 		itx.SendLinearReply("Error: "+name+" is invalid.", true)
 	}
-	return res, WrongTypeErr
 
+	return res, ErrWrongType
 }
 
 type DiscordOptionResponse interface {
@@ -94,7 +99,8 @@ func GetOption[T DiscordOptionResponse](itx *tempest.CommandInteraction, name st
 		if sendReply {
 			itx.SendLinearReply("Error: "+name+" is missing", true)
 		}
-		return res, MissingOptionErr
+
+		return res, ErrMissingOption
 	}
 
 	// Try direct type assertion first
@@ -104,6 +110,6 @@ func GetOption[T DiscordOptionResponse](itx *tempest.CommandInteraction, name st
 	if sendReply {
 		itx.SendLinearReply("Error: "+name+" is invalid.", true)
 	}
-	return res, WrongTypeErr
 
+	return res, ErrWrongType
 }

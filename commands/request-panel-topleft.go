@@ -1,16 +1,17 @@
-package command
+package commands
 
 import (
 	"database/sql"
 	"log"
-	utils "ticketune-bot/utils"
+
+	utils "github.com/pagefaultgames/ticketune-bot/utils"
 
 	"github.com/amatsagu/tempest"
 )
 
-var requestPanelCommandDescription string = "Ask the user to provide a screenshot of the login page with the usernames panel open"
+var requestPanelCommandDescription = "Ask the user to provide a screenshot of the login page with the usernames panel open"
 
-var RequestPanelCommand tempest.Command = tempest.Command{
+var RequestPanelCommand = tempest.Command{
 	Name:                "request-panel-topleft",
 	Description:         requestPanelCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
@@ -18,28 +19,23 @@ var RequestPanelCommand tempest.Command = tempest.Command{
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-var requestPanelCommandMsg string = "Could you please provide a screenshot of the login page __with the usernames panel open__? " +
+var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open__? " +
 	"To open the usernames panel, click on the gear in the top left corner - see this image for clarification!"
 
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
-
 	// Get the user associated with this thread (this handles responding to the interaction on error)
 	userID, err := utils.GetUserFromThread(itx)
 	if err != sql.ErrNoRows && err != nil {
 		return
 	}
 
-	threadID := itx.ChannelID
-
 	// The message to send publicaly to the thread
-	var msg string
-	// The message to use to respond to the interaction
-	var responseMsg string
+	msg := "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
 
-	if err == nil {
-		msg = "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
-		responseMsg = "The user has been requested to attempt a login."
-	} else {
+	// The message to use to respond to the interaction
+	responseMsg := "The user has been requested to attempt a login."
+
+	if err != nil {
 		log.Println("Error fetching user for thread:", err)
 		msg = requestPanelCommandMsg
 		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
@@ -72,16 +68,14 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 
 	// Send the user a message
 	_, err = itx.Client.SendMessage(
-		threadID,
+		itx.ChannelID,
 		msg2,
 		nil,
 	)
-
 	if err != nil {
 		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
 		return
 	}
 
 	itx.SendLinearReply(responseMsg, true)
-
 }

@@ -1,9 +1,9 @@
-package ticketuneTypes
+package types
 
 import (
 	"time"
 
-	tempest "github.com/amatsagu/tempest"
+	"github.com/amatsagu/tempest"
 )
 
 type ArchiveDuration int // Values for AutoArchiveDuration

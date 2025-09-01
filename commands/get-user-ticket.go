@@ -1,14 +1,15 @@
-package command
+package commands
 
 import (
 	"database/sql"
 	"fmt"
-	ticketune_db "ticketune-bot/ticketune-db"
+
+	"github.com/pagefaultgames/ticketune-bot/db"
 
 	"github.com/amatsagu/tempest"
 )
 
-var GetUserTicketCommand tempest.Command = tempest.Command{
+var GetUserTicketCommand = tempest.Command{
 	Name:                "get-user-ticket",
 	Description:         "Get a link to the support ticket thread for a user, if it exists",
 	SlashCommandHandler: getUserTicketCommandImpl,
@@ -29,16 +30,19 @@ func getUserTicketCommandImpl(itx *tempest.CommandInteraction) {
 		itx.SendLinearReply("You must specify a user", true)
 		return
 	}
+
 	userID, err := tempest.StringToSnowflake(userIDStr.(string))
 	if err != nil {
 		itx.SendLinearReply("Invalid user ID", true)
 		return
 	}
-	tid, err := ticketune_db.GetDB().GetUserThread(userID)
+
+	tid, err := db.Get().GetUserThread(userID)
 	if err == sql.ErrNoRows {
 		itx.SendLinearReply("This user does not have an open support ticket", true)
 		return
 	}
+
 	itx.SendReply(tempest.ResponseMessageData{
 		Content: fmt.Sprintf("Support ticket thread: <#%d>", tid),
 	}, true, nil)

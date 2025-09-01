@@ -1,16 +1,17 @@
-package command
+package commands
 
 import (
 	"database/sql"
 	"log"
-	utils "ticketune-bot/utils"
+
+	utils "github.com/pagefaultgames/ticketune-bot/utils"
 
 	"github.com/amatsagu/tempest"
 )
 
-var noSaveCommandDescription string = "Ping the user associated with this ticket and ask them to try to use a different browser"
+var noSaveCommandDescription = "Ping the user associated with this ticket and ask them to try to use a different browser"
 
-var NoSaveCommmand tempest.Command = tempest.Command{
+var NoSaveCommmand = tempest.Command{
 	Name:                "no-save",
 	Description:         noSaveCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
@@ -18,7 +19,7 @@ var NoSaveCommmand tempest.Command = tempest.Command{
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-var tryDifferentBrowserMessage string = "If there is another device or browser you've played on before, please use the gear there.\n" +
+var tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please use the gear there.\n" +
 	"Otherwise, please provide your username, as well as the date of account creation or the date you last played on this account " +
 	"(last played meaning the date you last started any kind of run)."
 
@@ -29,17 +30,13 @@ func noSaveCommmandImpl(itx *tempest.CommandInteraction) {
 		return
 	}
 
-	threadID := itx.ChannelID
-
 	// The message to send publicly to the thread
-	var msg string
-	// The message to use to respond to the interaction
-	var responseMsg string
+	msg := "Hi <@" + userID.String() + ">!\n" + tryDifferentBrowserMessage
 
-	if err == nil {
-		msg = "Hi <@" + userID.String() + ">!\n" + tryDifferentBrowserMessage
-		responseMsg = "The user has been requested to try a different device/browser."
-	} else {
+	// The message to use to respond to the interaction
+	responseMsg := "The user has been requested to try a different device/browser."
+
+	if err != nil {
 		log.Println("Error fetching user for thread:", err)
 		msg = tryWithDiscordMessage
 		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
@@ -48,10 +45,9 @@ func noSaveCommmandImpl(itx *tempest.CommandInteraction) {
 
 	// Send the user a message
 	_, err = itx.Client.SendLinearMessage(
-		threadID,
+		itx.ChannelID,
 		msg,
 	)
-
 	if err != nil {
 		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
 		return

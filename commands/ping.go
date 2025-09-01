@@ -1,10 +1,10 @@
-package command
+package commands
 
 import (
 	"github.com/amatsagu/tempest"
 )
 
-var PingCommand tempest.Command = tempest.Command{
+var PingCommand = tempest.Command{
 	Name:                "ping",
 	Description:         "Check if the bot is alive",
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,

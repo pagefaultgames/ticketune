@@ -1,16 +1,17 @@
-package command
+package commands
 
 import (
 	"database/sql"
 	"log"
-	utils "ticketune-bot/utils"
+
+	utils "github.com/pagefaultgames/ticketune-bot/utils"
 
 	"github.com/amatsagu/tempest"
 )
 
-var tryDiscordCommandDescription string = "Ping the user associated with this ticket and ask them to log into discord"
+var tryDiscordCommandDescription = "Ping the user associated with this ticket and ask them to log into discord"
 
-var TryDiscordCommand tempest.Command = tempest.Command{
+var TryDiscordCommand = tempest.Command{
 	Name:                "try-discord",
 	Description:         tryDiscordCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
@@ -18,7 +19,7 @@ var TryDiscordCommand tempest.Command = tempest.Command{
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-var tryWithDiscordMessage string = "Please try to log in with Discord now, and let us know here if it works!\n\n" +
+var tryWithDiscordMessage = "Please try to log in with Discord now, and let us know here if it works!\n\n" +
 	"Alternatively, you can also try this:\n" +
 	"Open Discord on your web browser. Connect to your Discord account (this one you are using). " +
 	"Open PokéRogue in another tab, while keeping the Discord one open. " +
