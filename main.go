@@ -39,6 +39,9 @@ func main() {
 	client.RegisterCommand(command.TryDiscordCommand)
 	client.RegisterCommand(command.NoSaveCommmand)
 	client.RegisterCommand(command.RequestPanelCommand)
+	client.RegisterCommand(command.OldAccountCommandGroup)
+	client.RegisterSubCommand(command.OldAccountDefault, command.OldAccountCommandGroup.Name)
+	client.RegisterSubCommand(command.OldAccountSpecific, command.OldAccountCommandGroup.Name)
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
