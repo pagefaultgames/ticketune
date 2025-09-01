@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/pagefaultgames/ticketune-bot/constants"
-	"github.com/pagefaultgames/ticketune-bot/db"
-	"github.com/pagefaultgames/ticketune-bot/utils"
+	"github.com/pagefaultgames/ticketune/constants"
+	"github.com/pagefaultgames/ticketune/db"
+	"github.com/pagefaultgames/ticketune/utils"
 
 	"github.com/amatsagu/tempest"
 )

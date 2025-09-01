@@ -1,4 +1,4 @@
-module github.com/pagefaultgames/ticketune-bot
+module github.com/pagefaultgames/ticketune
 
 go 1.24.5
 

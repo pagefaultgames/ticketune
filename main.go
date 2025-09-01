@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pagefaultgames/ticketune-bot/commands"
-	"github.com/pagefaultgames/ticketune-bot/db"
+	"github.com/pagefaultgames/ticketune/commands"
+	"github.com/pagefaultgames/ticketune/db"
 
 	"github.com/amatsagu/tempest"
 )

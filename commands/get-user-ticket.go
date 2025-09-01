@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/pagefaultgames/ticketune-bot/db"
+	"github.com/pagefaultgames/ticketune/db"
 
 	"github.com/amatsagu/tempest"
 )

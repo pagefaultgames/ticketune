@@ -5,7 +5,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/pagefaultgames/ticketune-bot/utils"
+	"github.com/pagefaultgames/ticketune/utils"
 
 	"github.com/amatsagu/tempest"
 )

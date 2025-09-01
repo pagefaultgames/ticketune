@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/pagefaultgames/ticketune-bot/constants"
-	"github.com/pagefaultgames/ticketune-bot/types"
+	"github.com/pagefaultgames/ticketune/constants"
+	"github.com/pagefaultgames/ticketune/types"
 
 	"github.com/amatsagu/tempest"
 )

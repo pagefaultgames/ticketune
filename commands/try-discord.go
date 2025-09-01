@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	utils "github.com/pagefaultgames/ticketune-bot/utils"
+	utils "github.com/pagefaultgames/ticketune/utils"
 
 	"github.com/amatsagu/tempest"
 )
