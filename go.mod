@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: CC0-1.0
+//
+// SPDX-License-Identifier: CC0-1.0
+
 module github.com/pagefaultgames/ticketune
 
 go 1.25
