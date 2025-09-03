@@ -14,7 +14,7 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var noSaveCommandDescription = "Ping and ask the user to try to log on a different browser or device they may have also played on"
+var noSaveCommandDescription = "Ping and ask the user to try to login on a different browser or device they may have also played on"
 var tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please use the gear there.\n" +
 	"Otherwise, please provide:\n" +
 	"- The username of the account you want to recover\n" +
