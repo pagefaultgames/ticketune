@@ -14,20 +14,21 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var tryDiscordCommandDescription = "Ping the user associated with this ticket and ask them to log into discord"
+var tryDiscordCommandDescription = "Ping and ask the user to attempt to log with Discord"
 
-var tryWithDiscordMessage = "Please try to log in with Discord now, and let us know here if it works!\n\n" +
+var tryWithDiscordMessage = "Please try to log in with Discord now, and __let us know here if it works__!\n\n" +
 	"Alternatively, you can also try this:\n" +
-	"Open Discord on your web browser. Connect to your Discord account (this one you are using). " +
-	"Open PokéRogue in another tab, while keeping the Discord one open. " +
-	"On the login page, click on the Discord button to try to log in with Discord."
+	"- Open Discord on your web browser.\n" +
+	"- Connect to your Discord account (this one you are using).\n" +
+	"- Open PokéRogue in another tab, while keeping the Discord one open.\n" +
+	"- On the login page, click on the Discord button to try to log in with Discord."
 
 var TryDiscordCommand = tempest.Command{
 	Name:                "try-discord",
 	Description:         tryDiscordCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
-		utils.SayCommandTemplate(itx, tryWithDiscordMessage, "The user has been requested to attempt a login.")
+		utils.SayCommandTemplate(itx, tryWithDiscordMessage, "The user has been requested to attempt a login with Discord.")
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }

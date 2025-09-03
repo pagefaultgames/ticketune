@@ -318,15 +318,16 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 					tempest.TextDisplayComponent{
 						Type: tempest.TEXT_DISPLAY_COMPONENT_TYPE,
 						Content: fmt.Sprintf(
-							"Hello %s! Please provide a screenshot of the login page __with the usernames panel open__. "+
-								"You need to click on the gear in the top left corner (see attached image for where to find that)! "+
+							"Hello %s!\n"+
+								"Please provide a screenshot of the login page __with the usernames panel open__.\n"+
+								"You need to __click on the gear in the top left corner__ (see attached image for where to find that)!\n"+
 								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
 								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
 								"we get back to you.**\n\n"+
-								"This process will link your Pokerogue account with your discord, allowing you to log in without "+
+								"This process will link your PokéRogue account with your Discord, allowing you to log in without "+
 								"needing your password.\n"+
-								"We have no way to access, check, change, or reset your password. "+
-								"**NEVER** give out personal details such as passwords anywhere, including in these threads.",
+								"We have __no way__ to access, check, change, or reset your password.\n"+
+								"Also, **NEVER** give out personal details such as passwords anywhere and to anyone, including in these threads.",
 							user.Mention(),
 						),
 					},

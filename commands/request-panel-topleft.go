@@ -17,7 +17,7 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var requestPanelCommandDescription = "Ask the user to provide a screenshot of the login page with the usernames panel open"
+var requestPanelCommandDescription = "Ping and ask the user to provide a screenshot of the login page with the usernames panel open"
 
 var RequestPanelCommand = tempest.Command{
 	Name:                "request-panel-topleft",
@@ -28,7 +28,7 @@ var RequestPanelCommand = tempest.Command{
 }
 
 var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open__? " +
-	"To open the usernames panel, click on the gear in the top left corner - see this image for clarification!"
+	"To open the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
@@ -41,7 +41,7 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	msg := "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
 
 	// The message to use to respond to the interaction
-	responseMsg := "The user has been requested to attempt a login."
+	responseMsg := "The user has been reminded to provide a screenshot with the usernames panel open."
 
 	if err != nil {
 		log.Println("Error fetching user for thread:", err)
