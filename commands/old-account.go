@@ -9,8 +9,6 @@
 package commands
 
 import (
-	"database/sql"
-	"log"
 	"strconv"
 
 	"github.com/pagefaultgames/ticketune/utils"
@@ -133,32 +131,5 @@ func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) {
 		msg = defaultMessageWithUsername(username)
 	}
 
-	// Get the user associated with this thread (this handles responding to the	 interaction on error)
-	userID, err := utils.GetUserFromThread(itx)
-	if err != sql.ErrNoRows && err != nil {
-		return
-	}
-
-	// The message to use to respond to the interaction
-	responseMsg := "The user has been notified."
-
-	msg = "Hi <@" + userID.String() + ">!\n" + msg
-
-	if err != nil {
-		log.Println("Error fetching user for thread:", err)
-		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
-			"However, I've sent the message to the thread."
-	}
-
-	// Send the user a message
-	_, err = itx.Client.SendLinearMessage(
-		itx.ChannelID,
-		msg,
-	)
-	if err != nil {
-		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
-		return
-	}
-
-	itx.SendLinearReply(responseMsg, true)
+	utils.SayCommandTemplate(itx, msg, "The user has been notified.")
 }
