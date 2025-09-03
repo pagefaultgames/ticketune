@@ -1,3 +1,10 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileContributor: SirzBenjie
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 // Extends the tempest library to correct the behavior of some functions using improper types
 
 package utils
