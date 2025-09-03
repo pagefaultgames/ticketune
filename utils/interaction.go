@@ -16,19 +16,22 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
+var ErrNotATicketThread = errors.New("this command can only be used in a password ticket thread")
+var ErrCantFetchChannel = errors.New("could not fetch channel information")
+
 // Get the channel and user ID associated with a command interaction
 // Errors if the
 func GetUserFromThread(itx *tempest.CommandInteraction) (tempest.Snowflake, error) {
 	// If this is not a thread in the ticket channel, do nothing
 	channel, err := GetChannelFromID(itx.Client, itx.ChannelID)
 	if err != nil {
-		itx.SendLinearReply("Error fetching channel information", true)
+		itx.SendLinearReply("Error fetching channel information, likely because I'm be missing permissions for this channel.", true)
 		return tempest.Snowflake(0), err
 	}
 
 	if !CheckIfPasswordTicketChannel(channel) {
-		itx.SendLinearReply("This command can only be used on a password ticket thread", true)
-		return tempest.Snowflake(0), errors.New("not a password ticket thread")
+		itx.SendLinearReply("This command can only be used in a password ticket thread", true)
+		return tempest.Snowflake(0), ErrNotATicketThread
 	}
 
 	userID, err := db.Get().GetThreadUser(itx.ChannelID)
