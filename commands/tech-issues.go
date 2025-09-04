@@ -17,7 +17,7 @@ import (
 
 var techIssuesCommandDescription = "Ping the user and inform them that technical issues are preventing us from helping them"
 
-var techIssuesMessage = "We are currently experiencing technical issues preventing us to help you as we speak. :jolteondead:\n" +
+var techIssuesMessage = "We are currently experiencing technical issues preventing us from helping you as we speak. :jolteondead:\n" +
 	"We apologize for the inconvenience, and we'll ping you as soon as possible once the issue is solved!\n\n" +
 	"Also, if in the meantime you happen to remember your password or prefer to close your ticket for the time being, __please let us now__!"
 
