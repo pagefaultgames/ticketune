@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/google/go-github/v74/github"
 	"github.com/jferrl/go-githubauth"
@@ -31,7 +32,12 @@ func init() {
 		log.Fatal("failed to create GitHub App token source: " + err.Error())
 	}
 
-	installationTokenSource := githubauth.NewInstallationTokenSource(164962081, appTokenSource)
+	installationIdStr, err := strconv.ParseInt(os.Getenv("TICKETUNE_INSTALL_ID"), 10, 64)
+	if err != nil {
+		log.Fatal("TICKETUNE_INSTALL_ID environment variable not set or not an integer")
+	}
+
+	installationTokenSource := githubauth.NewInstallationTokenSource(installationIdStr, appTokenSource)
 
 	httpClient := oauth2.NewClient(context.Background(), installationTokenSource)
 
@@ -85,6 +91,11 @@ func getInstallId(appTokenSource oauth2.TokenSource) int64 {
 	}
 	var responseJson idResponse
 	err = json.Unmarshal(body, &responseJson)
+	if err != nil {
+		log.Fatal("failed to unmarshal installation ID response body: " + err.Error())
+	}
+
+	log.Printf("Installation ID for org %s is %d\n", organization, responseJson.ID)
 
 	return responseJson.ID
 }

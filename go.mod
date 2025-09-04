@@ -7,13 +7,12 @@ module github.com/pagefaultgames/ticketune
 go 1.25
 
 require (
-	github.com/amatsagu/tempest v1.3.1 // direct
+	github.com/amatsagu/tempest v1.3.2-0.20250904180219-4ab6214521b3 // direct
 	github.com/google/go-github/v74 v74.0.0 // direct
+	github.com/jferrl/go-githubauth v1.4.0 // direct
 	github.com/mattn/go-sqlite3 v1.14.32 // direct
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.30.0 // direct
 )
-
-require github.com/jferrl/go-githubauth v1.4.0
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.3.0 // indirect

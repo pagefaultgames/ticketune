@@ -22,8 +22,9 @@ var WhichAccountCommand = tempest.Command{
 	Name:                "which-account",
 	Description:         whichAccountCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) error {
 		utils.SayCommandTemplate(itx, whichAccountMessage, "The user has been asked which account they need help with.")
+		return nil
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
