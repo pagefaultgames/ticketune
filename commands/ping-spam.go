@@ -15,7 +15,7 @@ import (
 
 var pingSpamCommandDescription = "Ping the user tell them to stop ping abuse"
 
-var pingSpamMessage = "**Please keep in mind that Helpers real people volunteering on their free time, so please don't ping them over and over.**\n" +
+var pingSpamMessage = "**Please keep in mind that Helpers are real people volunteering on their free time, so please don't ping them over and over.**\n" +
 	"**When someone is free, they'll reach out to help you, but until then, please be patient and wait until someone get back to you.**\n\n" +
 	"To be more precise, there is currently a colossal amount of 3 people helping on these tickets, all of them also working on other things for the project and having real life on the side.\n" +
 	"Please understand that the 20 tickets they get every day take a lot of time to deal with, they might be able to check them only once or twice per day and it can take them more than half an hour.\n" +
