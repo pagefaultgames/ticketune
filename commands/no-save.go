@@ -15,11 +15,11 @@ import (
 )
 
 var noSaveCommandDescription = "Ping and ask the user to try to login on a different browser or device they may have also played on"
-var tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please use the gear there.\n" +
+var tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please __try to use the gear there__.\n" +
 	"Otherwise, please provide:\n" +
 	"- The username of the account you want to recover\n" +
-	"- The date of account creation and/or the date you last played on this account " +
-	"(last played meaning the date you last started any kind of run)."
+	"- To the best of your memory, the date of account creation and the date you played for the last time on this account " +
+	"(played for the last time = when you most recently started any kind of run)"
 
 var NoSaveCommmand = tempest.Command{
 	Name:                "no-save",
