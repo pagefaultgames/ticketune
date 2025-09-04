@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2025 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
+ * SPDX-FileContributor: Lugiadrien
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
@@ -53,6 +54,8 @@ func main() {
 	client.RegisterSubCommand(commands.OldAccountSpecific, commands.OldAccountCommandGroup.Name)
 	client.RegisterCommand(commands.SayCommand)
 	client.RegisterCommand(commands.WhichAccountCommand)
+	client.RegisterCommand(commands.TechIssuesCommand)
+	client.RegisterCommand(commands.PingSpamCommand)
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
