@@ -13,7 +13,7 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var failDiscordCommandDescription = "Ping and ask the user to tell what happens when they attempt to login with Discord"
+var failDiscordCommandDescription = "Ping and ask the user to specify what happens when they attempt to login with Discord"
 
 var failDiscordMessage = "Could you please tell me what happens when you try to log in by clicking on the Discord icon (on the right of the login page)?"
 
