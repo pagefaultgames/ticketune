@@ -22,7 +22,7 @@ var FailDiscordCommand = tempest.Command{
 	Description:         failDiscordCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
-		utils.SayCommandTemplate(itx, failDiscordMessage, "The user has been asked to tell what happens when they attempt to login with Discord.")
+		utils.SayCommandTemplate(itx, failDiscordMessage, "The user has been asked to specify what happens when they attempt to login with Discord.")
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
