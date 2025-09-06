@@ -324,7 +324,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
 								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
 								"we get back to you.**\n\n"+
-								"This process will link your PokéRogue account with your Discord, allowing you to log in without "+
+								"This process will link your PokéRogue account with the Discord account you used to open this ticket, allowing you to log in without "+
 								"needing your password.\n"+
 								"We have __no way__ to access, check, change, or reset your password.\n"+
 								"Also, **NEVER** give out personal details such as passwords anywhere and to anyone, including in these threads.",

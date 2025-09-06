@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2025 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
+ * SPDX-FileContributor: Lugiadrien
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
@@ -46,6 +47,7 @@ func main() {
 	client.RegisterCommand(commands.GetUserTicketCommand)
 	client.RegisterCommand(commands.CloseCommand)
 	client.RegisterCommand(commands.TryDiscordCommand)
+	client.RegisterCommand(commands.FailDiscordCommand)
 	client.RegisterCommand(commands.NoSaveCommmand)
 	client.RegisterCommand(commands.RequestPanelCommand)
 	client.RegisterCommand(commands.OldAccountCommandGroup)
@@ -58,6 +60,8 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to register new issue modal handler", err)
 	}
+	client.RegisterCommand(commands.TechIssuesCommand)
+	client.RegisterCommand(commands.PingSpamCommand)
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
