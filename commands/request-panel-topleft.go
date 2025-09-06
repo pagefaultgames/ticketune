@@ -30,11 +30,11 @@ var RequestPanelCommand = tempest.Command{
 var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open__? " +
 	"To open the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
-func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
+func requestPanelCommandImpl(itx *tempest.CommandInteraction) error {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
 	userID, err := utils.GetUserFromThread(itx)
 	if err != sql.ErrNoRows && err != nil {
-		return
+		return nil
 	}
 
 	// The message to send publicaly to the thread
@@ -82,8 +82,9 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	)
 	if err != nil {
 		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
-		return
+		return nil
 	}
 
 	itx.SendLinearReply(responseMsg, true)
+	return nil
 }

@@ -31,7 +31,7 @@ var CloseCommand = tempest.Command{
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
+func closeTicketCommandImpl(itx *tempest.CommandInteraction) error {
 	// If this is not a thread in the ticket channel, do nothing
 	channel, err := utils.GetChannelFromID(itx.Client, itx.ChannelID)
 	if err != nil {
@@ -43,14 +43,14 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 	// If ParentID is not the ticket channel ID, this is not a valid ticket thread
 	if channel.ParentID != constants.TICKET_CHANNEL_ID || channel.Type != tempest.GUILD_PRIVATE_THREAD_CHANNEL_TYPE {
 		itx.SendLinearReply("This command can only be used on a password ticket thread", true)
-		return
+		return nil
 	}
 
 	user, err := db.Get().CloseThread(itx.ChannelID)
 	if err == sql.ErrNoRows {
 		// If no rows were returned, tell the initiator of the commands.
 		itx.SendLinearReply("Error: I couldn't find a user associated with this thread in my database. You'll have to close the thread manually.", true)
-		return
+		return nil
 	}
 
 	// Delete the channel permissions for the user
@@ -58,7 +58,7 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 	if err != nil {
 		log.Println("Error deleting channel permission for user:", err)
 		itx.SendLinearReply("Error: I couldn't remove the user's permissions to access this thread. You'll have to close the thread manually.", true)
-		return
+		return nil
 	}
 
 	// Delete the thread
@@ -75,6 +75,7 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 			false,
 		)
 	}
+	return nil
 }
 
 // Remove permission overrides for the user in the ticket channel
