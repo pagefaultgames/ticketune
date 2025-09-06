@@ -47,6 +47,7 @@ func main() {
 	client.RegisterCommand(commands.GetUserTicketCommand)
 	client.RegisterCommand(commands.CloseCommand)
 	client.RegisterCommand(commands.TryDiscordCommand)
+	client.RegisterCommand(commands.FailDiscordCommand)
 	client.RegisterCommand(commands.NoSaveCommmand)
 	client.RegisterCommand(commands.RequestPanelCommand)
 	client.RegisterCommand(commands.OldAccountCommandGroup)
