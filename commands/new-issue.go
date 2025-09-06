@@ -233,6 +233,8 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 		steps = "_No response_"
 	}
 
+	log.Printf("Creating issue with title: %s, labels: %v", title, issueLabels)
+
 	err := mitx.Defer(true)
 	if err != nil {
 		log.Print("Failed to defer issue modal: ", err)
@@ -270,7 +272,7 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 		issueRequest := &github.IssueRequest{
 			// Assuming discord respected our 200 character limit,
 			// this will be less than the 256 character github limit for titles
-			Title:  github.Ptr("[Bug] " + strings.TrimSpace(title)),
+			Title:  github.Ptr(title),
 			Body:   github.Ptr(issueBody),
 			Type:   github.Ptr("bug"),
 			Labels: &issueLabels,

@@ -54,7 +54,10 @@ func main() {
 	client.RegisterCommand(commands.SayCommand)
 	client.RegisterCommand(commands.WhichAccountCommand)
 	client.RegisterCommand(commands.NewIssueCommand)
-	client.RegisterModal(commands.CreateIssueModalId, commands.HandleNewIssueModal)
+	err = client.RegisterModal(commands.CreateIssueModalId, commands.HandleNewIssueModal)
+	if err != nil {
+		log.Fatal("failed to register new issue modal handler", err)
+	}
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {

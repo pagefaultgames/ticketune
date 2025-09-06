@@ -1,11 +1,5 @@
-github.com/amatsagu/tempest v1.3.2-0.20250904161016-0ed86c0a0d43 h1:0Cbr9OGWTUonKq391bZNyXpZMZES3JTr5YHsB7eRr1g=
-github.com/amatsagu/tempest v1.3.2-0.20250904161016-0ed86c0a0d43/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
-github.com/amatsagu/tempest v1.3.2-0.20250904173250-6349d4b63af2 h1:MaI1p/EJe/+Ra854/6rFNSYwg7A7gRTv4iB5Z4tw+yo=
-github.com/amatsagu/tempest v1.3.2-0.20250904173250-6349d4b63af2/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
-github.com/amatsagu/tempest v1.3.2-0.20250904174035-6c9ba2659ed3 h1:IfX+Muxis2u18su40/zZ54zn4s73xEQ4fcjMKCGoZGU=
-github.com/amatsagu/tempest v1.3.2-0.20250904174035-6c9ba2659ed3/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
-github.com/amatsagu/tempest v1.3.2-0.20250904180219-4ab6214521b3 h1:6vTk6YAGD5niigyVYwNJXK3YmSX6jxcaZY7wSNe6Xnk=
-github.com/amatsagu/tempest v1.3.2-0.20250904180219-4ab6214521b3/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
+github.com/amatsagu/tempest v1.3.2 h1:TanWsA/F1MH/hYFWlu/h0eFqYyFn0Kb6NjlY1FHf6fA=
+github.com/amatsagu/tempest v1.3.2/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
 github.com/golang-jwt/jwt/v5 v5.3.0 h1:pv4AsKCKKZuqlgs5sUmn4x8UlGa0kEVt/puTpKx9vvo=
 github.com/golang-jwt/jwt/v5 v5.3.0/go.mod h1:fxCRLWMO43lRc8nhHWY6LGqRcf+1gQWArsqaEUEa5bE=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
