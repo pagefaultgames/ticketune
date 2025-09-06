@@ -18,7 +18,7 @@ var failDiscordCommandDescription = "Ping and ask the user to specify what happe
 var failDiscordMessage = "Could you please tell me what happens when you try to log in by clicking on the Discord icon (on the right of the login page)?"
 
 var FailDiscordCommand = tempest.Command{
-	Name:                "tech-issues",
+	Name:                "fail-discord",
 	Description:         failDiscordCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
