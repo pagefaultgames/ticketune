@@ -158,7 +158,7 @@ func sendIssueModal(itx *tempest.CommandInteraction, prefillBody string) {
 }
 
 // newIssueCommand handles the /new-issue Message command
-func newIssueCommand(itx *tempest.CommandInteraction) error {
+func newIssueCommand(itx *tempest.CommandInteraction) {
 	var isMessage bool = itx.Interaction != nil && itx.Data.TargetID != 0
 
 	prefillBody := ""
@@ -171,8 +171,6 @@ func newIssueCommand(itx *tempest.CommandInteraction) error {
 	}  */
 
 	sendIssueModal(itx, prefillBody)
-
-	return nil
 }
 
 // Helper function to extract the component from a modal response's label

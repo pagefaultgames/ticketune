@@ -40,14 +40,14 @@ var SayCommand = tempest.Command{
 	},
 }
 
-func sayCommandImpl(itx *tempest.CommandInteraction) error {
+func sayCommandImpl(itx *tempest.CommandInteraction) {
 	// Error can be discarded, as the argument is optional, and we default to `false`
 	noPing, _ := utils.GetOption[bool](itx, "no-ping", false)
 	message, err := utils.GetOption[string](itx, "message", true)
 
 	// GetOption already handles responding to the interaction on error
 	if err != nil {
-		return nil
+		return
 	}
 	var responseMsg string = "Your message has been sent to the thread."
 
@@ -57,7 +57,7 @@ func sayCommandImpl(itx *tempest.CommandInteraction) error {
 	// These errors are already handled in GetUserFromThread
 	if err != nil && (err == utils.ErrNotATicketThread || err != utils.ErrCantFetchChannel) {
 		// An error occurred that was not "not a ticket thread" or "no such thread"
-		return nil
+		return
 	}
 
 	if !noPing {
@@ -76,9 +76,9 @@ func sayCommandImpl(itx *tempest.CommandInteraction) error {
 	_, err = utils.SendDiscordMessage(itx.Client, itx.ChannelID, messageParams, nil, true)
 	if err != nil {
 		itx.SendLinearReply("Error sending message to thread: "+err.Error(), true)
-		return nil
+		return
 	}
 
 	itx.SendLinearReply(responseMsg, true)
-	return nil
+	return
 }

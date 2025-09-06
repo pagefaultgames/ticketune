@@ -25,9 +25,8 @@ var NoSaveCommmand = tempest.Command{
 	Name:                "no-save",
 	Description:         noSaveCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) error {
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, tryDifferentBrowserMessage, "The user has been requested to try to login on a different browser or device.")
-		return nil
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }

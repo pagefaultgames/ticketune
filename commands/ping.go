@@ -22,7 +22,7 @@ var PingCommand = tempest.Command{
 		Name:        "ephemeral",
 		Description: "Whether the reply should be ephemeral (only visible to you, default false)",
 	}},
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) error {
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		ephemeral := false
 		if len(itx.Data.Options) > 0 {
 			if v, ok := itx.Data.Options[0].Value.(bool); ok {
@@ -30,6 +30,6 @@ var PingCommand = tempest.Command{
 			}
 		}
 		itx.SendLinearReply("I'm still alive!", ephemeral)
-		return nil
+		return
 	},
 }

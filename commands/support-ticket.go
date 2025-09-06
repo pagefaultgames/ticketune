@@ -24,7 +24,7 @@ import (
 )
 
 // This command sends a message with an "Open Ticket" button to the channel where the command was invoked
-func supportTicketCmdImpl(itx *tempest.CommandInteraction) error {
+func supportTicketCmdImpl(itx *tempest.CommandInteraction) {
 	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
 		Components: []tempest.LayoutComponent{
@@ -67,12 +67,12 @@ func supportTicketCmdImpl(itx *tempest.CommandInteraction) error {
 		itx.SendReply(tempest.ResponseMessageData{
 			Content: "Failed to send ticket message" + err.Error(),
 		}, true, nil)
-		return nil
+		return
 	} else {
 		itx.SendReply(tempest.ResponseMessageData{
 			Content: "Ticket message sent!",
 		}, true, nil)
-		return nil
+		return
 	}
 }
 

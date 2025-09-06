@@ -32,28 +32,26 @@ var GetUserTicketCommand = tempest.Command{
 	}},
 }
 
-func getUserTicketCommandImpl(itx *tempest.CommandInteraction) error {
+func getUserTicketCommandImpl(itx *tempest.CommandInteraction) {
 	userIDStr, present := itx.GetOptionValue("user")
 	if !present {
 		itx.SendLinearReply("You must specify a user", true)
-		return nil
+		return
 	}
 
 	userID, err := tempest.StringToSnowflake(userIDStr.(string))
 	if err != nil {
 		itx.SendLinearReply("Invalid user ID", true)
-		return nil
+		return
 	}
 
 	tid, err := db.Get().GetUserThread(userID)
 	if err == sql.ErrNoRows {
 		itx.SendLinearReply("This user does not have an open support ticket", true)
-		return nil
+		return
 	}
 
 	itx.SendReply(tempest.ResponseMessageData{
 		Content: fmt.Sprintf("Support ticket thread: <#%d>", tid),
 	}, true, nil)
-
-	return nil
 }

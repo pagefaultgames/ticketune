@@ -28,9 +28,8 @@ var TryDiscordCommand = tempest.Command{
 	Name:                "try-discord",
 	Description:         tryDiscordCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) error {
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, tryWithDiscordMessage, "The user has been requested to attempt a login with Discord.")
-		return nil
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }

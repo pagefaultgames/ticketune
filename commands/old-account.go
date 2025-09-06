@@ -29,7 +29,7 @@ var OldAccountDefault = tempest.Command{
 	Name:                "default",
 	Description:         oldAccountDefaultDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) error { oldAccountCommandImpl(itx, true); return nil },
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) { oldAccountCommandImpl(itx, true) },
 	Options: []tempest.CommandOption{{
 		Type:        tempest.STRING_OPTION_TYPE,
 		Name:        "username",
@@ -45,7 +45,7 @@ var OldAccountSpecific = tempest.Command{
 	Name:                "specific",
 	Description:         oldAccountSpecificDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	SlashCommandHandler: func(itx *tempest.CommandInteraction) error { return oldAccountCommandImpl(itx, false) },
+	SlashCommandHandler: func(itx *tempest.CommandInteraction) { oldAccountCommandImpl(itx, false) },
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 	Options: []tempest.CommandOption{
 		{
@@ -108,18 +108,18 @@ func defaultMessageWithUsername(username string) string {
 	return "The account ``" + username + "``" + defaultMessage
 }
 
-func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) error {
+func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) {
 	// if no arguments, then use a default message
 	var msg string
 	if !isDefault {
 		username, parseError := utils.GetOption[string](itx, "username", true)
 		if parseError != nil {
-			return nil
+			return
 		}
 
 		unit, parseError := utils.GetOption[string](itx, "unit", true)
 		if parseError != nil {
-			return nil
+			return
 		}
 
 		amount, _ := utils.GetNumericOption[int](itx, "amount", false)
@@ -132,6 +132,4 @@ func oldAccountCommandImpl(itx *tempest.CommandInteraction, isDefault bool) erro
 	}
 
 	utils.SayCommandTemplate(itx, msg, "The user has been notified.")
-
-	return nil
 }
