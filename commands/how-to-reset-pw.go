@@ -15,7 +15,7 @@ import (
 
 var howResetPwDescription = "Ping the user to explain them where to change their password"
 
-var howResetPwMessage = "You can change your password once logged in. Press Escape, then go to “Manage Data”, and finally choose “Change Password” " +
+var howResetPwMessage = "You can change your password once logged in. Press Escape to open the menu, then go to “Manage Data”, and finally choose “Change Password” " +
 	"This will log you out of all other devices.\n" +
 	"Be sure to write down or remember this new password!"
 
