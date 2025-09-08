@@ -13,18 +13,18 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var pingSpamCommandDescription = "Ping the user to explain them where to change their password"
+var howResetPwDescription = "Ping the user to explain them where to change their password"
 
-var pingSpamMessage = "You can change your password once logged in. Press Escape, then go to “Manage Data”, and finally choose “Change Password” " +
+var howResetPwMessage = "You can change your password once logged in. Press Escape, then go to “Manage Data”, and finally choose “Change Password” " +
 	"This will log you out of all other devices.\n" +
 	"Be sure to write down or remember this new password !"
 
-var PingSpamCommand = tempest.Command{
+var HowResetPwCommand = tempest.Command{
 	Name:                "how-to-reset-pw",
-	Description:         pingSpamCommandDescription,
+	Description:         howResetPwCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
-		utils.SayCommandTemplate(itx, pingSpamMessage, "The user has been explain how to change their password.")
+		utils.SayCommandTemplate(itx, howResetPwMessage, "The user has been explain how to change their password.")
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
