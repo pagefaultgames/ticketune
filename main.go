@@ -62,6 +62,7 @@ func main() {
 	}
 	client.RegisterCommand(commands.TechIssuesCommand)
 	client.RegisterCommand(commands.PingSpamCommand)
+	client.RegisterCommand(commands.HowResetPwCommand)
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
