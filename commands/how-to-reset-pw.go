@@ -22,7 +22,7 @@ var howResetPwMessage = "You can change your password once logged in.\n" +
 
 var HowResetPwCommand = tempest.Command{
 	Name:                "how-to-reset-pw",
-	Description:         howResetPwCommandDescription,
+	Description:         howResetPwDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, howResetPwMessage, "The user has been explain how to change their password.")
