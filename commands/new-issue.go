@@ -106,6 +106,7 @@ func sendIssueModal(itx *tempest.CommandInteraction, prefillBody string) {
 						{Label: "Item", Value: "Item", Description: "Issues with items"},
 						{Label: "Sprite/Animation", Value: "Sprite/Animation", Description: "Issues with sprites or animations"},
 						{Label: "UI/UX", Value: "UI/UX", Description: "User interface / user experience issues"},
+						{Label: "Save Data", Value: "Save Data", Description: "Affects user save data"},
 						{Label: "Mystery Encounter", Value: "Mystery Encounter", Description: "Issues with a mystery encounter"},
 						{Label: "Audio", Value: "Audio", Description: "Issues with sound effects or music"},
 						{Label: "Challenges", Value: "Challenges", Description: "Challenge mode(s) related"},
