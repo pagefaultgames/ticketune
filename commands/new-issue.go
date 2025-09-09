@@ -230,9 +230,6 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 	if additionalContext == "" {
 		steps = "_No response_"
 	}
-
-	log.Printf("Creating issue with title: %s, labels: %v", title, issueLabels)
-
 	err := mitx.Defer(true)
 	if err != nil {
 		log.Print("Failed to defer issue modal: ", err)
