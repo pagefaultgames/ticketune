@@ -64,7 +64,7 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
 						Items: []tempest.MediaGalleryItem{{
 							Media: tempest.UnfurledMediaItem{
-								URL: "https://cdn.discordapp.com/attachments/1365035899821494282/1411412105789440193/resources_username-panel-location.png",
+								URL: "https://cdn.discordapp.com/attachments/1284892701023666176/1433481586543825047/new_logscreen_obvious.png",
 							},
 							Description: "Image showing the location of the usernames panel",
 						}},
