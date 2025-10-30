@@ -335,7 +335,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
 						Items: []tempest.MediaGalleryItem{{
 							Media: tempest.UnfurledMediaItem{
-								URL: "https://cdn.discordapp.com/attachments/1284892701023666176/1433481586543825047/new_logscreen_obvious.png",
+								URL: "https://cdn.discordapp.com/attachments/1284892701023666176/1433485614598062170/new_logscreen_obvious.png",
 							},
 							Description: "Image showing the location of the usernames panel",
 						}},
