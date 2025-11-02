@@ -16,7 +16,7 @@ import (
 
 var tryDiscordCommandDescription = "Ping and ask the user to attempt to log with Discord"
 
-var tryWithDiscordMessage = "Please try to log in with Discord now, and __let us know here if it works__! " +
+var tryWithDiscordMessage = "Please try to log in with Discord now, and __let us know here if it works__!\n" +
 	"Make sure to use the __same Discord account__ you used to open this ticket!\n\n" +
 	"Alternatively, you can also try this:\n" +
 	"1. Open Discord on your web browser\n" +
