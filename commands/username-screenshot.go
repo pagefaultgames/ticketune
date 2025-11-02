@@ -15,7 +15,7 @@ import (
 
 var usernameScreenshotDescription = "Ping and ask the user to check for any screenshot or .prsv file where their username can appear."
 var usernameScreenshotMessage = "By any chance, maybe you have some screenshot with your username visible, or even a PokéRogue save file (.prsv)?\n" +
-	"In some device, Discord server, DMs, etc...?\n" +
+	"In some device, Discord server, DMs, etc...?\n\n" +
 	"__The username can apprear on screenshots taken from:__\n" +
 	"- The first page of a Pokémon Sumamry, as OT\n" +
 	"- Game stats screen *(since August 23rd 2025)*\n" +
