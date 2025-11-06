@@ -27,8 +27,8 @@ var RequestPanelCommand = tempest.Command{
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
-var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open__? " +
-	"To open the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
+var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open or the error code it might display__?\n" +
+	"To try opening the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
@@ -64,7 +64,7 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
 						Items: []tempest.MediaGalleryItem{{
 							Media: tempest.UnfurledMediaItem{
-								URL: "https://cdn.discordapp.com/attachments/1365035899821494282/1411412105789440193/resources_username-panel-location.png",
+								URL: "https://cdn.discordapp.com/attachments/1284892701023666176/1433485614598062170/new_logscreen_obvious.png",
 							},
 							Description: "Image showing the location of the usernames panel",
 						}},

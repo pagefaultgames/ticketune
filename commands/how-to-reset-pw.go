@@ -18,7 +18,7 @@ var howResetPwDescription = "Ping the user to explain them where to change their
 var howResetPwMessage = "You can change your password once logged in.\n" +
 	"__Press Escape to open the menu__, then go to “Manage Data”, and finally choose “Change Password”. " +
 	"This will log you out of all other devices.\n" +
-	"Be sure to write down or remember this new password!"
+	"Be sure to write down or remember this new password, and also consider __linking to your Discord account__!"
 
 var HowResetPwCommand = tempest.Command{
 	Name:                "how-to-reset-pw",

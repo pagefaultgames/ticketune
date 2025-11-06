@@ -318,8 +318,8 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 					tempest.TextDisplayComponent{
 						Type: tempest.TEXT_DISPLAY_COMPONENT_TYPE,
 						Content: fmt.Sprintf(
-							"Hello %s!\n"+
-								"Please provide a screenshot of the login page __with the usernames panel open__.\n"+
+							"### Hello %s!\n"+
+								"Please provide a screenshot of the login page __with the usernames panel open or the error code it might display__.\n"+
 								"You need to __click on the gear in the top left corner__ (see attached image for where to find that)!\n"+
 								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
 								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
@@ -335,7 +335,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
 						Items: []tempest.MediaGalleryItem{{
 							Media: tempest.UnfurledMediaItem{
-								URL: "https://cdn.discordapp.com/attachments/1365035899821494282/1411412105789440193/resources_username-panel-location.png",
+								URL: "https://cdn.discordapp.com/attachments/1284892701023666176/1433485614598062170/new_logscreen_obvious.png",
 							},
 							Description: "Image showing the location of the usernames panel",
 						}},
