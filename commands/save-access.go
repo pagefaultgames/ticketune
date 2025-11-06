@@ -19,13 +19,13 @@ var saveAccessMessage = "Here is the range of things we can check or not about a
 	"- When it has been saved for the last time\n" +
 	"- Game stats screen\n" +
 	"- Pokédex progress\n" +
-	"- We **can't** check the content of any of your runs\n"
-	"- We **can't** check your Run History\n\n"
+	"- We **can't** check the content of any of your runs\n" +
+	"- We **can't** check your Run History\n\n" +
 	"Also, we **can't** use keywords to find a username, so **we need the exact username**."
 
 var SaveAccessCommmand = tempest.Command{
 	Name:                "save-access",
-	Description:         saveAccessCommandDescription,
+	Description:         saveAccessDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, saveAccessMessage, "The user has been informed about what Helpers can check about their saves.")
