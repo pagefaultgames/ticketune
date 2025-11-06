@@ -80,5 +80,5 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 	}
 
 	itx.SendLinearReply(responseMsg, true)
-
+	return
 }

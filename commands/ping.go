@@ -30,5 +30,6 @@ var PingCommand = tempest.Command{
 			}
 		}
 		itx.SendLinearReply("I'm still alive!", ephemeral)
+		return
 	},
 }

@@ -47,6 +47,7 @@ func main() {
 	client.RegisterCommand(commands.GetUserTicketCommand)
 	client.RegisterCommand(commands.CloseCommand)
 	client.RegisterCommand(commands.TryDiscordCommand)
+	client.RegisterCommand(commands.FailDiscordCommand)
 	client.RegisterCommand(commands.NoSaveCommmand)
 	client.RegisterCommand(commands.RequestPanelCommand)
 	client.RegisterCommand(commands.OldAccountCommandGroup)
@@ -54,8 +55,16 @@ func main() {
 	client.RegisterSubCommand(commands.OldAccountSpecific, commands.OldAccountCommandGroup.Name)
 	client.RegisterCommand(commands.SayCommand)
 	client.RegisterCommand(commands.WhichAccountCommand)
+	client.RegisterCommand(commands.NewIssueCommand)
+	client.RegisterCommand(commands.UsernameScreenshotCommmand)
+	client.RegisterCommand(commands.SaveAccessCommmand)
+	err = client.RegisterModal(commands.CreateIssueModalId, commands.HandleNewIssueModal)
+	if err != nil {
+		log.Fatal("failed to register new issue modal handler", err)
+	}
 	client.RegisterCommand(commands.TechIssuesCommand)
 	client.RegisterCommand(commands.PingSpamCommand)
+	client.RegisterCommand(commands.HowResetPwCommand)
 
 	err = client.SyncCommandsWithDiscord([]tempest.Snowflake{guildID}, nil, false)
 	if err != nil {
