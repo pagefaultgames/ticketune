@@ -28,7 +28,7 @@ var RequestPanelCommand = tempest.Command{
 }
 
 var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open or the error code it might display__?\n" +
-	"To try open the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
+	"To try opening the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
