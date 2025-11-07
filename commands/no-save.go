@@ -19,7 +19,7 @@ var tryDifferentBrowserMessage = "If there is another device or browser you've p
 	"Otherwise, please provide:\n" +
 	"- The username of the account you want to recover\n" +
 	"- To the best of your memory, the date of account creation and the date you played for the last time on this account " +
-	"(played for the last time = when you most recently started any kind of run)" +
+	"(played for the last time = when you most recently started any kind of run)\n" +
 	"- Any information regarding game stats and/or the progress of your Pokédex."
 
 var NoSaveCommmand = tempest.Command{
