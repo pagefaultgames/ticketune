@@ -18,15 +18,13 @@ import (
 	"github.com/pagefaultgames/ticketune/types"
 )
 
-var ErrMissingRequiredField = errors.New("at least one of content, embeds, components, or files to be present")
+var ErrMissingRequiredField = errors.New("at least one of content, embeds, components, or files must be present")
 
 // A replacement for `tempest.SendMessage` that accepts `types.CreateMessageParams` instead of `tempest.Message`
 // Necessary, as tempest does not include support for fields like AllowedMentions
 // At the moment, does not support files.
 // Also adds an additional parameter, `discardResponse`, for when the message response is not needed
-func SendDiscordMessage[
-	t tempest.Message,
-](
+func SendDiscordMessage(
 	client *tempest.Client,
 	channelID tempest.Snowflake,
 	message types.CreateMessageParams,
