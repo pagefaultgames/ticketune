@@ -14,14 +14,14 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var whichAccountCommandDescription = "Ping and ask the user which account they would like help with"
-
+const whichAccountCommandDescription = "Ping and ask the user which account they would like help with"
 const whichAccountMessage = "Which account would you like help with?"
 
 var WhichAccountCommand = tempest.Command{
 	Name:                "which-account",
 	Description:         whichAccountCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
+	Options:             []tempest.CommandOption{NO_PING_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, whichAccountMessage, "The user has been asked which account they need help with.")
 	},

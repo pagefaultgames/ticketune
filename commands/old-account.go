@@ -30,14 +30,17 @@ var OldAccountDefault = tempest.Command{
 	Description:         oldAccountDefaultDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) { oldAccountCommandImpl(itx, true) },
-	Options: []tempest.CommandOption{{
-		Type:        tempest.STRING_OPTION_TYPE,
-		Name:        "username",
-		Description: "The username of the old account",
-		Required:    false,
-		MinLength:   1,
-		MaxLength:   64,
-	}},
+	Options: []tempest.CommandOption{
+		{
+			Type:        tempest.STRING_OPTION_TYPE,
+			Name:        "username",
+			Description: "The username of the old account",
+			Required:    false,
+			MinLength:   1,
+			MaxLength:   64,
+		},
+		NO_PING_OPTION,
+	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
 
@@ -73,6 +76,7 @@ var OldAccountSpecific = tempest.Command{
 			Description: "The number of time units. If omitted, will just say \"in a few [units]\"",
 			Required:    false,
 		},
+		NO_PING_OPTION,
 	},
 }
 

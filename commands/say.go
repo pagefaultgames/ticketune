@@ -31,12 +31,7 @@ var SayCommand = tempest.Command{
 			MinLength:   3,
 			MaxLength:   1900,
 		},
-		{
-			Type:        tempest.BOOLEAN_OPTION_TYPE,
-			Name:        "no-ping",
-			Description: "Do not ping the user associated with this ticket. Defaults to false (ping the user).",
-			Required:    false,
-		},
+		NO_PING_OPTION,
 	},
 }
 
@@ -60,15 +55,14 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 		return
 	}
 
-	if !noPing {
-		if err == nil {
-			message = "Hi <@" + userID.String() + ">!\n" + message
-			messageParams.AllowedMentions = &tempest.AllowedMentions{Users: []tempest.Snowflake{userID}}
-		} else {
-			log.Println("Error fetching user for thread:", err)
-			responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
-				"However, I've sent the message to the thread."
-		}
+	switch {
+	case !noPing && err == nil:
+		message = "Hi <@" + userID.String() + ">!\n" + message
+		messageParams.AllowedMentions = &tempest.AllowedMentions{Users: []tempest.Snowflake{userID}}
+	case !noPing:
+		log.Println("Error fetching user for thread:", err)
+		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
+			"However, I've sent the message to the thread."
 	}
 
 	messageParams.Content = message
@@ -80,5 +74,5 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 	}
 
 	itx.SendLinearReply(responseMsg, true)
-	return
+
 }

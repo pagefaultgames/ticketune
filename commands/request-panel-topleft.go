@@ -17,18 +17,19 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var requestPanelCommandDescription = "Ping and ask the user to provide a screenshot of the login page with the usernames panel open"
+const requestPanelCommandDescription = "Ping and ask the user to provide a screenshot of the login page with the usernames panel open"
+
+const requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open or the error code it might display__?\n" +
+	"To try opening the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
 var RequestPanelCommand = tempest.Command{
 	Name:                "request-panel-topleft",
 	Description:         requestPanelCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
+	Options:             []tempest.CommandOption{NO_PING_OPTION},
 	SlashCommandHandler: requestPanelCommandImpl,
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
-
-var requestPanelCommandMsg = "Could you please provide a screenshot of the login page __with the usernames panel open or the error code it might display__?\n" +
-	"To try opening the usernames panel, click __on the gear in the top left corner__ - see this image for clarification!"
 
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
@@ -36,21 +37,20 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	if err != sql.ErrNoRows && err != nil {
 		return
 	}
-
-	// The message to send publicaly to the thread
-	msg := "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
-
-	// The message to use to respond to the interaction
 	responseMsg := "The user has been reminded to provide a screenshot with the usernames panel open."
+	noPing, _ := utils.GetOption[bool](itx, "no-ping", false)
+	msgContent := requestPanelCommandMsg
 
-	if err != nil {
+	switch {
+	case !noPing && err == nil:
 		log.Println("Error fetching user for thread:", err)
-		msg = requestPanelCommandMsg
 		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
 			"However, I've sent the login message to the thread."
+	case !noPing:
+		msgContent = "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
 	}
 
-	msg2 := tempest.Message{
+	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
 		Components: []tempest.LayoutComponent{
 			tempest.ContainerComponent{
@@ -58,7 +58,7 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 				Components: []tempest.AnyComponent{
 					tempest.TextDisplayComponent{
 						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
-						Content: msg,
+						Content: msgContent,
 					},
 					tempest.MediaGalleryComponent{
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
@@ -74,10 +74,9 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 		},
 	}
 
-	// Send the user a message
 	_, err = itx.Client.SendMessage(
 		itx.ChannelID,
-		msg2,
+		msg,
 		nil,
 	)
 	if err != nil {
