@@ -18,9 +18,12 @@ const saveAccessMessage = "Here is the range of things we can check or not about
 	"- When it has been created\n" +
 	"- When it has been saved for the last time\n" +
 	"- Game stats screen\n" +
-	"- Pokédex progress\n" +
+	"- Pokédex progress, including\n" +
+	"  - Shinies you caught\n" +
+	"  - Pokémon that have *completed* classic mode\n" +
 	"- We **can't** check the content of any of your runs\n" +
-	"- We **can't** check your Run History\n\n"
+	"- We **can't** check your Run History\n\n" +
+	"-# **Note**: Without sufficient information to verify account ownership, we will be unable to link your account."
 
 var SaveAccessCommmand = tempest.Command{
 	Name:                "save-access",
