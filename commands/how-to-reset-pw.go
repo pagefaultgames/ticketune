@@ -18,12 +18,13 @@ var howResetPwDescription = "Ping the user to explain them where to change their
 var howResetPwMessage = "You can change your password once logged in.\n" +
 	"__Press Escape to open the menu__, then go to “Manage Data”, and finally choose “Change Password”. " +
 	"This will log you out of all other devices.\n" +
-	"Be sure to write down or remember this new password, and also consider __linking to your Discord account__!"
+	"Be sure to write down or remember this new password!"
 
 var HowResetPwCommand = tempest.Command{
 	Name:                "how-to-reset-pw",
 	Description:         howResetPwDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
+	Options:             []tempest.CommandOption{NO_PING_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, howResetPwMessage, "The user has been explain how to change their password.")
 	},

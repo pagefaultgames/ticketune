@@ -13,8 +13,8 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
-var usernameScreenshotDescription = "Ping and ask the user to check for any screenshot or .prsv file where their username can appear."
-var usernameScreenshotMessage = "By any chance, maybe you have some screenshot with your username visible, or even a PokéRogue save file (.prsv)?\n" +
+const usernameScreenshotDescription = "Ping and ask the user to check for any screenshot or .prsv file where their username can appear."
+const usernameScreenshotMessage = "By any chance, maybe you have some screenshot with your username visible, or even a PokéRogue save file (.prsv)?\n" +
 	"In some device, Discord server, DMs, etc.?\n\n" +
 	"__The username can appear on screenshots taken from:__\n" +
 	"- The first page of a Pokémon Summary, as OT\n" +

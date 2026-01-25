@@ -29,12 +29,16 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 		return
 	}
 
+	// Discard error; if the option is missing, we default to `false`
+	noPing, _ := GetOption[bool](itx, "no-ping", false)
+
 	// The message to send publicly to the thread
-	msg := "Hi <@" + userID.String() + ">!\n" + content
+	if err == nil && !noPing {
+		content = "Hi <@" + userID.String() + ">!\n" + content
+	}
 
 	if err != nil {
 		log.Println("Error fetching user for thread:", err)
-		msg = content
 		invokerResponse = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
 			"However, I've sent the message to the thread."
 	}
@@ -42,7 +46,7 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 	// Send the user a message
 	_, err = itx.Client.SendLinearMessage(
 		itx.ChannelID,
-		msg,
+		content,
 	)
 	if err != nil {
 		itx.SendLinearReply("Something went wrong trying to send the message: "+err.Error(), true)
