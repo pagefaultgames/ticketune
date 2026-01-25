@@ -11,6 +11,7 @@ import (
 	"log"
 
 	"github.com/amatsagu/tempest"
+	"github.com/pagefaultgames/ticketune/constants"
 	"github.com/pagefaultgames/ticketune/types"
 	"github.com/pagefaultgames/ticketune/utils"
 )
@@ -61,8 +62,7 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 		messageParams.AllowedMentions = &tempest.AllowedMentions{Users: []tempest.Snowflake{userID}}
 	case !noPing:
 		log.Println("Error fetching user for thread:", err)
-		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
-			"However, I've sent the message to the thread."
+		responseMsg = constants.COULD_NOT_FIND_USER_TO_PING
 	}
 
 	messageParams.Content = message

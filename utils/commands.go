@@ -12,6 +12,7 @@ import (
 	"log"
 
 	"github.com/amatsagu/tempest"
+	"github.com/pagefaultgames/ticketune/constants"
 )
 
 // Base say command functionality reusable by multiple command implementations
@@ -39,8 +40,7 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 
 	if err != nil {
 		log.Println("Error fetching user for thread:", err)
-		invokerResponse = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
-			"However, I've sent the message to the thread."
+		invokerResponse = constants.COULD_NOT_FIND_USER_TO_PING
 	}
 
 	// Send the user a message
