@@ -17,10 +17,12 @@ import (
 const noSaveCommandDescription = "Ping and ask the user to try to login on a different browser or device they may have also played on"
 const tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please __try to use the gear there__.\n" +
 	"Otherwise, please provide:\n" +
-	"- The username of the account you want to recover\n" +
-	"- To the best of your memory, the date of account creation and the date you played for the last time on this account " +
-	"(played for the last time = when you most recently started any kind of run)\n" +
-	"- Any information regarding game stats and/or the progress of your Pokédex."
+        " - The username of the account you want to recover\n" +
+        " - To the best of your memory:\n" +
+        "  - The month and year of account creation\n" +
+        "  -  The month and year you played for the last time on this account\n" +
+        "-# Played for the last time = when you most recently started any kind of run\n" +
+        " - Any information regarding game stats and/or the progress of your Pokédex."
 
 var NoSaveCommmand = tempest.Command{
 	Name:                "no-save",
