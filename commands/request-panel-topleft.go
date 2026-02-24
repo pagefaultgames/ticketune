@@ -43,11 +43,11 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 
 	switch {
 	case !noPing && err == nil:
+		msgContent = "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
+	case !noPing:
 		log.Println("Error fetching user for thread:", err)
 		responseMsg = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
 			"However, I've sent the login message to the thread."
-	case !noPing:
-		msgContent = "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
 	}
 
 	msg := tempest.Message{
