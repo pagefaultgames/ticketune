@@ -23,7 +23,7 @@ var (
 )
 
 // "I couldn't find a user associated with this thread in my database, so I can't ping them...."
-const COULD_NOT_FIND_USER_TO_PING = "I couldn't find a user associated with this thread in my database, so I can't ping them." +
+const COULD_NOT_FIND_USER_TO_PING = "I couldn't find a user associated with this thread in my database, so I can't ping them.\n" +
 	"However, I've sent the requested message to the thread."
 
 // Initialize the constants from environment variables
