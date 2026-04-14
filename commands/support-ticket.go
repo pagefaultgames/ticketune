@@ -326,7 +326,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 								"we get back to you.**\n\n"+
 								"This process will link your PokéRogue account with the Discord account you used to open this ticket, allowing you to log in without "+
 								"needing your password.\n"+
-								"We have __no way__ to access, check, change, or reset your password.\n"+
+								"We have __no way__ to access, check, change, or reset your password, however once you are logged in you are able to change it in the menu yourself.\n"+
 								"Also, **NEVER** give out personal details such as passwords anywhere and to anyone, including in these threads.",
 							user.Mention(),
 						),
