@@ -35,3 +35,4 @@ Thumbs.db
 # ngrok
 ngrok*
 ticketune-db.sqlite3
+ticketune

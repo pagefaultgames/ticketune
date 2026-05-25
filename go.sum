@@ -1,5 +1,11 @@
 github.com/amatsagu/tempest v1.3.2 h1:TanWsA/F1MH/hYFWlu/h0eFqYyFn0Kb6NjlY1FHf6fA=
 github.com/amatsagu/tempest v1.3.2/go.mod h1:A9vVE9Nzo1R5OeldgGBzuq00s2V8PBUGpo7Xr+HYWvE=
+github.com/amatsagu/tempest v1.3.3 h1:ZhZuiCQ1IYk9iUnE+ob7QmOOUDqhNX/Y7yQBEZddtAQ=
+github.com/amatsagu/tempest v1.3.3/go.mod h1:01qHm96xmjNLOd8ErseQuFKvdwdYrXcHpkTY4t3a2NA=
+github.com/amatsagu/tempest v1.4.0 h1:ex5OcM4RNvbGEH7hrzIjyvw236isweSlKRPaY+SJIWY=
+github.com/amatsagu/tempest v1.4.0/go.mod h1:gVvUMs35YhFvJVHPYa4aj3ye+VnFek+4Ovo2wrJKQeM=
+github.com/amatsagu/tempest v1.6.0 h1:GP9/R6x5a9xvPwp/+TtznCrHSvrmF4kZ5hW9iXZuSCM=
+github.com/amatsagu/tempest v1.6.0/go.mod h1:8oz7uU0USMjcvSZjTUbH1JKpqVJFJ+JrT9oXbFDn/6U=
 github.com/golang-jwt/jwt/v5 v5.3.0 h1:pv4AsKCKKZuqlgs5sUmn4x8UlGa0kEVt/puTpKx9vvo=
 github.com/golang-jwt/jwt/v5 v5.3.0/go.mod h1:fxCRLWMO43lRc8nhHWY6LGqRcf+1gQWArsqaEUEa5bE=
 github.com/google/go-cmp v0.5.2/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
@@ -13,6 +19,8 @@ github.com/google/go-querystring v1.1.0 h1:AnCroh3fv4ZBgVIf1Iwtovgjaw/GiKJo8M8yD
 github.com/google/go-querystring v1.1.0/go.mod h1:Kcdr2DB4koayq7X8pmAG4sNG59So17icRSOU623lUBU=
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
 github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
+github.com/gorilla/websocket v1.5.3 h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
+github.com/gorilla/websocket v1.5.3/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/jferrl/go-githubauth v1.4.0 h1:lb3LUKOXnqtjb6PdB+qw74zOvWdRyIp/lWjDlPNIA8M=
 github.com/jferrl/go-githubauth v1.4.0/go.mod h1:B+IZ+R0heTfIGxhm7wC7b52B3ADh/AfD0bKY5vktBV4=
 github.com/mattn/go-sqlite3 v1.14.32 h1:JD12Ag3oLy1zQA+BNn74xRgaBbdhbNIDYvQUEuuErjs=

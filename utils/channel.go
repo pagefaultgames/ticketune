@@ -20,7 +20,7 @@ import (
 )
 
 // Fetch a channel object from its ID
-func GetChannelFromID(client *tempest.Client, cid tempest.Snowflake) (types.Channel, error) {
+func GetChannelFromID(client *tempest.BaseClient, cid tempest.Snowflake) (types.Channel, error) {
 	response, err := client.Rest.Request(http.MethodGet, fmt.Sprintf("/channels/%d", cid), nil)
 	if err != nil {
 		return types.Channel{}, err

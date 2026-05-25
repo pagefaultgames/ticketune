@@ -98,7 +98,7 @@ var CreateSupportTicketCommand = tempest.Command{
 
 // Return whether the user is a member of the thread
 // https://discord.com/developers/docs/resources/channel#get-thread-member
-func checkIfUserIsMemberOfThread(client *tempest.Client, threadID, userID tempest.Snowflake) bool {
+func checkIfUserIsMemberOfThread(client *tempest.BaseClient, threadID, userID tempest.Snowflake) bool {
 	_, err := client.Rest.Request(
 		http.MethodGet,
 		fmt.Sprintf("/channels/%d/thread-members/%d", threadID, userID),
@@ -110,7 +110,7 @@ func checkIfUserIsMemberOfThread(client *tempest.Client, threadID, userID tempes
 }
 
 // Return whether there is an open, non-locked ticket for the user
-func checkIfOpenTicketExists(client *tempest.Client, userID tempest.Snowflake) (bool, tempest.Snowflake, error) {
+func checkIfOpenTicketExists(client *tempest.BaseClient, userID tempest.Snowflake) (bool, tempest.Snowflake, error) {
 	// Get the thread ID from the database
 	tid, err := db.Get().GetUserThread(userID)
 	if err != nil {
@@ -269,7 +269,7 @@ func sendPostTicketCreatedMessage(itx *tempest.ComponentInteraction, threadID te
 
 // Create a thread in the given channel, with the provided name
 // https://discord.com/developers/docs/resources/channel#start-thread-without-message
-func createThread(client *tempest.Client, channelID tempest.Snowflake, threadName string) (tempest.Snowflake, error) {
+func createThread(client *tempest.BaseClient, channelID tempest.Snowflake, threadName string) (tempest.Snowflake, error) {
 	// TODO: Maybe add the X-Audit-Log-Reason header here
 	// if we can figure out how, that contains the interaction
 	// that caused this thread to be created
@@ -294,7 +294,7 @@ func createThread(client *tempest.Client, channelID tempest.Snowflake, threadNam
 	return thread.ID, nil
 }
 
-func addMemberToThread(client *tempest.Client, threadID, userID tempest.Snowflake) error {
+func addMemberToThread(client *tempest.BaseClient, threadID, userID tempest.Snowflake) error {
 	_, err := client.Rest.Request(
 		http.MethodPut,
 		fmt.Sprintf("/channels/%d/thread-members/%d", threadID, userID),
@@ -308,7 +308,7 @@ func addMemberToThread(client *tempest.Client, threadID, userID tempest.Snowflak
 }
 
 // Send the support ticket message to the specified thread
-func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake, user *tempest.User) error {
+func sendSupportTicketMessage(client *tempest.BaseClient, threadId tempest.Snowflake, user *tempest.User) error {
 	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
 		Components: []tempest.LayoutComponent{
@@ -358,7 +358,7 @@ func sendSupportTicketMessage(client *tempest.Client, threadId tempest.Snowflake
 }
 
 // Give the user ID permissions to view, send messages in threads, and read message history in the ticket channel
-func giveUserTicketChannelPerms(client *tempest.Client, userID tempest.Snowflake) error {
+func giveUserTicketChannelPerms(client *tempest.BaseClient, userID tempest.Snowflake) error {
 	_, err := client.Rest.Request(
 		http.MethodPut,
 		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),

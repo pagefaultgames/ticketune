@@ -29,8 +29,11 @@ func main() {
 	}
 
 	log.Println("Creating new Tempest client...")
-	client := tempest.NewClient(tempest.ClientOptions{
-		Token:     os.Getenv("DISCORD_BOT_TOKEN"),
+	client := tempest.NewHTTPClient(tempest.HTTPClientOptions{
+		BaseClientOptions: tempest.BaseClientOptions{
+
+			Token: os.Getenv("DISCORD_BOT_TOKEN"),
+		},
 		PublicKey: os.Getenv("DISCORD_PUBLIC_KEY"),
 	})
 

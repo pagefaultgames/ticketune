@@ -78,7 +78,7 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 }
 
 // Remove permission overrides for the user in the ticket channel
-func deleteChannelPermissionForUser(client *tempest.Client, userID tempest.Snowflake) error {
+func deleteChannelPermissionForUser(client *tempest.BaseClient, userID tempest.Snowflake) error {
 	_, err := client.Rest.Request(
 		http.MethodDelete,
 		fmt.Sprintf("/channels/%d/permissions/%d", constants.TICKET_CHANNEL_ID, userID),

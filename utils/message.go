@@ -25,7 +25,7 @@ var ErrMissingRequiredField = errors.New("at least one of content, embeds, compo
 // At the moment, does not support files.
 // Also adds an additional parameter, `discardResponse`, for when the message response is not needed
 func SendDiscordMessage(
-	client *tempest.Client,
+	client *tempest.BaseClient,
 	channelID tempest.Snowflake,
 	message types.CreateMessageParams,
 	files []tempest.File,
