@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
  *
@@ -33,7 +33,7 @@ var CloseCommand = tempest.Command{
 
 func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 	// If this is not a thread in the ticket channel, do nothing
-	channel, err := utils.GetChannelFromID(itx.Client, itx.ChannelID)
+	channel, err := utils.GetChannelFromID(itx.BaseClient, itx.ChannelID)
 	if err != nil {
 		log.Println("Error fetching channel info:", err)
 		//return // will be caught by next check
@@ -54,7 +54,7 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 	}
 
 	// Delete the channel permissions for the user
-	err = deleteChannelPermissionForUser(itx.Client, user)
+	err = deleteChannelPermissionForUser(itx.BaseClient, user)
 	if err != nil {
 		log.Println("Error deleting channel permission for user:", err)
 		itx.SendLinearReply("Error: I couldn't remove the user's permissions to access this thread. You'll have to close the thread manually.", true)
@@ -62,7 +62,7 @@ func closeTicketCommandImpl(itx *tempest.CommandInteraction) {
 	}
 
 	// Delete the thread
-	_, err = itx.Client.Rest.Request(
+	_, err = itx.BaseClient.Rest.Request(
 		http.MethodDelete,
 		fmt.Sprintf("/channels/%d", itx.ChannelID),
 		nil,

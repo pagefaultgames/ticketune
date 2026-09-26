@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -36,15 +36,17 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 	// The message to send publicly to the thread
 	if err == nil && !noPing {
 		content = "Hi <@" + userID.String() + ">!\n" + content
+	} else if err == ErrHelperThread && !noPing {
+		content = "Hi <@" + userID.String() + ">!\n" + content
 	}
 
-	if err != nil {
+	if err != nil && !noPing && err != ErrHelperThread {
 		log.Println("Error fetching user for thread:", err)
 		invokerResponse = constants.COULD_NOT_FIND_USER_TO_PING
 	}
 
 	// Send the user a message
-	_, err = itx.Client.SendLinearMessage(
+	_, err = itx.BaseClient.SendLinearMessage(
 		itx.ChannelID,
 		content,
 	)

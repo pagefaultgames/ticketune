@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
  *
@@ -23,26 +23,80 @@ import (
 	"github.com/amatsagu/tempest"
 )
 
+const NewPasswordSupportTicketModalId = "open-pw-ticket-modal"
+
+// Message sent by Ticketune that greets the user and informs them of the process for getting help
+const passwordTicketMessage = "### Hello %s!\n" +
+	"Thank you for submitting your request.\n" +
+	"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. " +
+	"When someone is free, they'll reach out to help you, but until then, please be patient and wait until " +
+	"we get back to you.**\n\n" +
+	"This process will link your PokéRogue account with the Discord account you used to open this ticket, allowing you to log in without " +
+	"needing your password.\n" +
+	"We have __no way__ to access, check, change, or reset your password, however once you are logged in you are able to change it in the menu yourself.\n" +
+	"Also, **NEVER** give out personal details such as passwords anywhere and to anyone, including in these threads."
+
+// "I was unable to create your support ticket. Please try again..."
+var couldNotCreateThread = fmt.Sprintf(
+	"I was unable to create your support ticket. Please try again.\n"+
+		"If this issue persists, please reach out to someone in <#%d>.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
+)
+
+// "I was unable to add you to the support ticket..."
+var couldNotAddToThread = fmt.Sprintf(
+	"I created support thread, but something went wrong while trying to give you access to it. "+
+		"Please reach out to someone in <#%d> for help, and mention that I was unable to give you access to your password reset ticket.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
+)
+
+// "something went wrong while trying to send the instructions..."
+var couldNotSendInstruction = fmt.Sprintf(
+	"I created your support ticket and added you to it, "+
+		"but something went wrong while trying to send the instructions. Please reach out to someone in <#%d>, and mention that I could not send the instructions.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID)
+
+// "Something went wrong, I couldn't get your user ID..."
+var couldNotGetUserID = fmt.Sprintf(
+	"Something went wrong, I couldn't get your user ID. Please try again, and if the issue persists, reach out to someone in <#%d>.",
+	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
+)
+
+// Message displayed by Ticketune in the ephemeral message sent to the user when they click the "Open Ticket" button.
+const ticketCreationInstructions = "# Forgotten Password Support\n" +
+	"Forgot your password? Click the button below to open a support ticket. " +
+	"You'll need to provide a screenshot of the login page with the usernames panel open, or the error code it might display. " +
+	"You need to click on the gear in the top left corner (see attached image for where to find that)!"
+
 // This command sends a message with an "Open Ticket" button to the channel where the command was invoked
 func supportTicketCmdImpl(itx *tempest.CommandInteraction) {
 	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
-		Components: []tempest.LayoutComponent{
+		Components: []tempest.MessageComponent{
 			tempest.ContainerComponent{
 				AccentColor: 0x51ff00,
 				Type:        tempest.CONTAINER_COMPONENT_TYPE,
 				// Can't actually be AnyComponent here, must be one of the specific component types
 				// allowed inside a container
-				Components: []tempest.AnyComponent{
+				Components: []tempest.ContainerChildComponent{
 					tempest.TextDisplayComponent{
 						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
-						Content: "# Forgotten Password Support",
+						Content: ticketCreationInstructions,
+					},
+					tempest.MediaGalleryComponent{
+						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
+						Items: []tempest.MediaGalleryItem{{
+							Media: tempest.UnfurledMediaItem{
+								URL: "https://raw.githubusercontent.com/pagefaultgames/ticketune/refs/heads/main/assets/gearIcon.png",
+							},
+							Description: "Image showing the location of the usernames panel",
+						}},
 					},
 					tempest.SectionComponent{
 						Type: tempest.SECTION_COMPONENT_TYPE,
 						Components: []tempest.TextDisplayComponent{{
 							Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
-							Content: "Forgot your password? Click the button to open a support ticket.",
+							Content: "## Forgot your password? Click the button to open a support ticket.",
 						}},
 						Accessory: tempest.ButtonComponent{
 							Type:     tempest.BUTTON_COMPONENT_TYPE,
@@ -62,7 +116,7 @@ func supportTicketCmdImpl(itx *tempest.CommandInteraction) {
 		channelID, _ = tempest.StringToSnowflake(channel.(string))
 	}
 
-	_, err := itx.Client.SendMessage(channelID, msg, nil)
+	_, err := itx.BaseClient.SendMessage(channelID, msg, nil)
 	if err != nil {
 		itx.SendReply(tempest.ResponseMessageData{
 			Content: "Failed to send ticket message" + err.Error(),
@@ -154,37 +208,131 @@ func sendAlreadyCreatedTicketMessage(itx *tempest.ComponentInteraction, threadID
 	return nil
 }
 
-// "I was unable to create your support ticket. Please try again..."
-var couldNotCreateThread = fmt.Sprintf(
-	"I was unable to create your support ticket. Please try again.\n"+
-		"If this issue persists, please reach out to someone in <#%d>.",
-	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
-)
-
-// "I was unable to add you to the support ticket..."
-var couldNotAddToThread = fmt.Sprintf(
-	"I created support thread, but something went wrong while trying to give you access to it. "+
-		"Please reach out to someone in <#%d> for help, and mention that I was unable to give you access to your password reset ticket.",
-	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
-)
-
-// "something went wrong while trying to send the instructions..."
-var couldNotSendInstruction = fmt.Sprintf(
-	"I created your support ticket and added you to it, "+
-		"but something went wrong while trying to send the instructions. Please reach out to someone in <#%d>, and mention that I could not send the instructions.",
-	constants.BOT_TROUBLESHOOTING_CHANNEL_ID)
-
-// "Something went wrong, I couldn't get your user ID..."
-var couldNotGetUserID = fmt.Sprintf(
-	"Something went wrong, I couldn't get your user ID. Please try again, and if the issue persists, reach out to someone in <#%d>.",
-	constants.BOT_TROUBLESHOOTING_CHANNEL_ID,
-)
-
 // Acknowledge the interaction with a generic error message
-func acknowledgeErrorMessage(itx *tempest.ComponentInteraction, content string) {
+func acknowledgeErrorMessage(itx *tempest.ModalInteraction, content string) {
 	itx.AcknowledgeWithMessage(tempest.ResponseMessageData{
 		Content: content,
 	}, true)
+}
+
+func HandleNewPasswordModal(mitx tempest.ModalInteraction) {
+	// This means that the interaction was not in a guild, which should not be possible.
+	member := mitx.Member
+
+	if member == nil || member.User == nil {
+		_ = mitx.AcknowledgeWithLinearMessage("Error: Unable to identify user", true)
+		return
+	}
+
+	if mitx.Data.Resolved == nil {
+		acknowledgeErrorMessage(&mitx, "Error: Unable to resolve interaction data")
+		return
+	}
+	userID := member.User.ID
+
+	threadID, err := createThread(mitx.BaseClient, constants.TICKET_CHANNEL_ID, fmt.Sprintf("Password Help - %s", member.User.Username))
+	if err != nil {
+		log.Println("failed to create thread", err)
+		// Notify the user that we failed to create the thread
+		acknowledgeErrorMessage(&mitx, couldNotCreateThread)
+		return
+	}
+
+	// Set the user thread if we were able to create it, regardless if we successfully added them.
+	// This ensures users cannot spam the button to create multiple threads, even if the bot ran into some issue..
+	err = db.Get().SetUserThread(userID, threadID)
+	// TODO: When this happens, send a message to some channel saying something went wrong with DB
+	if err != nil {
+		log.Println("failed to save thread to database", err)
+	}
+
+	// Give the user permission to view and send messages in threads in the ticket channel
+	err = giveUserTicketChannelPerms(mitx.BaseClient, userID)
+	if err != nil {
+		log.Println("failed to give user ticket channel perms", err)
+		acknowledgeErrorMessage(&mitx, couldNotAddToThread)
+		return
+	}
+
+	// Add the user to the thread
+	err = addMemberToThread(mitx.BaseClient, threadID, userID)
+	// An error here generally means the bot has insufficient permissions to add the user to the thread
+	if err != nil {
+		log.Println("failed to add member to thread", err)
+		acknowledgeErrorMessage(&mitx, couldNotAddToThread)
+		return
+	}
+
+	err = sendPostTicketCreatedMessage(&mitx, threadID)
+	if err != nil {
+		// This code path means that the bot was not able to reply with a simple message.
+		// There's nothing we can do to communicate with the user, but they would have still had a ticket opened.
+		// Proceed to try to send the instructions message, but log the error
+		log.Println("failed to send post ticket created message", err)
+	}
+
+	// TODO: Change this to a modal?
+	err = sendSupportTicketMessage(mitx.BaseClient, threadID, member.User, &mitx.Data)
+	if err != nil {
+		log.Println("failed to send instruction message", err)
+		acknowledgeErrorMessage(&mitx, couldNotSendInstruction)
+	}
+}
+
+var OpenPasswordTicketModal = tempest.ResponseModalData{
+	Title:    "Password Help",
+	CustomID: NewPasswordSupportTicketModalId,
+	Components: []tempest.ModalComponent{
+		tempest.LabelComponent{
+			Type:        tempest.LABEL_COMPONENT_TYPE,
+			Label:       "Username",
+			Description: "Please enter the username you need help with.",
+			Component: tempest.TextInputComponent{
+				Type:        tempest.TEXT_INPUT_COMPONENT_TYPE,
+				CustomID:    "username",
+				Style:       tempest.SHORT_TEXT_INPUT_STYLE,
+				Placeholder: "Username",
+				Required:    true,
+				MaxLength:   200,
+			},
+		},
+		tempest.LabelComponent{
+			Type:        tempest.LABEL_COMPONENT_TYPE,
+			Label:       "Screenshot of gear panel or error code",
+			Description: "Click the gear icon in the top-left and screenshot the result, even if you see an error.",
+			Component: tempest.FileUploadComponent{
+				Type:      tempest.FILE_UPLOAD_COMPONENT_TYPE,
+				CustomID:  "screenshot",
+				FileTypes: []string{"image"},
+				Required:  true,
+			},
+		},
+		tempest.LabelComponent{
+			Type:        tempest.LABEL_COMPONENT_TYPE,
+			Label:       "Approximate date of last login",
+			Description: "Please enter the date you created the account as well as the last time you played",
+			Component: tempest.TextInputComponent{
+				Type:        tempest.TEXT_INPUT_COMPONENT_TYPE,
+				CustomID:    "account-dates",
+				Style:       tempest.SHORT_TEXT_INPUT_STYLE,
+				Placeholder: "Dates of account creation and last login",
+				Required:    false,
+				MaxLength:   200,
+			},
+		},
+		tempest.LabelComponent{
+			Type:        tempest.LABEL_COMPONENT_TYPE,
+			Label:       "Additional information",
+			Description: "Any additional information to help us confirm account ownership: shinies caught, classic wins, etc.",
+			Component: tempest.TextInputComponent{
+				Type:        tempest.TEXT_INPUT_COMPONENT_TYPE,
+				CustomID:    "additional-info",
+				Style:       tempest.PARAGRAPH_TEXT_INPUT_STYLE,
+				Placeholder: "Additional information",
+				Required:    false,
+			},
+		},
+	},
 }
 
 // This function will be used at every button click, there's no max time limit.
@@ -201,62 +349,29 @@ func OpenTicketButtonCallback(itx tempest.ComponentInteraction) {
 
 	// Discard any errors from checkIfOpenTicketExists, proceeding as though no ticket
 	// exists.
-	exists, tid, _ := checkIfOpenTicketExists(itx.Client, userID)
+	exists, tid, _ := checkIfOpenTicketExists(itx.BaseClient, userID)
 	if exists {
 		sendAlreadyCreatedTicketMessage(&itx, tid)
 		return
 	}
 
-	threadID, err := createThread(itx.Client, constants.TICKET_CHANNEL_ID, fmt.Sprintf("Password Help - %s", user.Username))
+	// Respond to the interaction with a message that tells the user they will need a screenshot of their
+	// username panel open, and has a button they click to open a modal to submit their username and
+	// the screenshot. This is to avoid the user opening a ticket and then not providing the screenshot, which would require a helper to manually
+	// ask for it.
+
+	err := itx.AcknowledgeWithModal(OpenPasswordTicketModal)
 	if err != nil {
-		log.Println("failed to create thread", err)
-		// Notify the user that we failed to create the thread
-		acknowledgeErrorMessage(&itx, couldNotCreateThread)
+		log.Println("failed to acknowledge interaction with modal", err)
+		itx.AcknowledgeWithMessage(tempest.ResponseMessageData{
+			Content: couldNotCreateThread,
+		}, true)
 		return
-	}
-
-	// Set the user thread if we were able to create it, regardless if we successfully added them.
-	// This ensures users cannot spam the button to create multiple threads, even if the bot ran into some issue..
-	err = db.Get().SetUserThread(userID, threadID)
-	// TODO: When this happens, send a message to some channel saying something went wrong with DB
-	if err != nil {
-		log.Println("failed to save thread to database", err)
-	}
-
-	// Give the user permission to view and send messages in threads in the ticket channel
-	err = giveUserTicketChannelPerms(itx.Client, userID)
-	if err != nil {
-		log.Println("failed to give user ticket channel perms", err)
-		acknowledgeErrorMessage(&itx, couldNotAddToThread)
-	}
-
-	// Add the user to the thread
-	err = addMemberToThread(itx.Client, threadID, userID)
-	// An error here generally means the bot has insufficient permissions to add the user to the thread
-	if err != nil {
-		log.Println("failed to add member to thread", err)
-		acknowledgeErrorMessage(&itx, couldNotAddToThread)
-		return
-	}
-
-	err = sendPostTicketCreatedMessage(&itx, threadID)
-	if err != nil {
-		// This code path means that the bot was not able to reply with a simple message.
-		// There's nothing we can do to communicate with the user, but they would have still had a ticket opened.
-		// Proceed to try to send the instructions message, but log the error
-		log.Println("failed to send post ticket created message", err)
-	}
-
-	// TODO: Change this to a modal?
-	err = sendSupportTicketMessage(itx.Client, threadID, user)
-	if err != nil {
-		log.Println("failed to send instruction message", err)
-		acknowledgeErrorMessage(&itx, couldNotSendInstruction)
 	}
 }
 
 // Respond to the interaction with an ephemeral message containing the link to the created thread
-func sendPostTicketCreatedMessage(itx *tempest.ComponentInteraction, threadID tempest.Snowflake) error {
+func sendPostTicketCreatedMessage(itx *tempest.ModalInteraction, threadID tempest.Snowflake) error {
 	err := itx.AcknowledgeWithMessage(tempest.ResponseMessageData{
 		Content: fmt.Sprintf("A new ticket has been created: <#%d>", threadID),
 	}, true)
@@ -308,37 +423,67 @@ func addMemberToThread(client *tempest.BaseClient, threadID, userID tempest.Snow
 }
 
 // Send the support ticket message to the specified thread
-func sendSupportTicketMessage(client *tempest.BaseClient, threadId tempest.Snowflake, user *tempest.User) error {
+func sendSupportTicketMessage(client *tempest.BaseClient, threadId tempest.Snowflake, user *tempest.User, modalData *tempest.ModalInteractionData) error {
+	// the username they entered
+	username := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 0).Value
+	if username == "" {
+		username = "_No response_"
+	}
+	dates := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 2).Value
+	if dates == "" {
+		dates = "_No response_"
+	}
+	additionalInfo := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 3).Value
+	if additionalInfo == "" {
+		additionalInfo = "_No response_"
+	}
+
+	// TODO: Replace with utils.GetFileUploadAttachment once the bug in tempest is fixed
+	// For now, assume that the first field in Attachment is always the screenshot
+	var attachment tempest.Attachment
+	for _, val := range modalData.Resolved.Attachments {
+		attachment = val
+		break
+	}
+
+	// Construct a message to send to the thread with the information they provided.
 	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
-		Components: []tempest.LayoutComponent{
+		Components: []tempest.MessageComponent{
 			tempest.ContainerComponent{
 				Type: tempest.CONTAINER_COMPONENT_TYPE,
-				Components: []tempest.AnyComponent{
+				Components: []tempest.ContainerChildComponent{
 					tempest.TextDisplayComponent{
 						Type: tempest.TEXT_DISPLAY_COMPONENT_TYPE,
-						Content: fmt.Sprintf(
-							"### Hello %s!\n"+
-								"Please provide a screenshot of the login page __with the usernames panel open or the error code it might display__.\n"+
-								"You need to __click on the gear in the top left corner__ (see attached image for where to find that)!\n"+
-								"**Please keep in mind that we are real people volunteering our time, so please don't ping us over and over. "+
-								"When someone is free, they'll reach out to help you, but until then, please be patient and wait until "+
-								"we get back to you.**\n\n"+
-								"This process will link your PokéRogue account with the Discord account you used to open this ticket, allowing you to log in without "+
-								"needing your password.\n"+
-								"We have __no way__ to access, check, change, or reset your password, however once you are logged in you are able to change it in the menu yourself.\n"+
-								"Also, **NEVER** give out personal details such as passwords anywhere and to anyone, including in these threads.",
-							user.Mention(),
-						),
+						Content: fmt.Sprintf("## Information submitted by the user\n\n"+
+							"### Username \n%s\n"+
+							"### Dates\n%s\n"+
+							"### Additional Info\n%s\n"+
+							"### Screenshot Submitted\n",
+							username,
+							dates,
+							additionalInfo),
 					},
 					tempest.MediaGalleryComponent{
 						Type: tempest.MEDIA_GALLERY_COMPONENT_TYPE,
 						Items: []tempest.MediaGalleryItem{{
 							Media: tempest.UnfurledMediaItem{
-								URL: "https://raw.githubusercontent.com/pagefaultgames/ticketune/refs/heads/main/assets/gearIcon.png",
+								URL: attachment.URL,
 							},
-							Description: "Image showing the location of the usernames panel",
+							Description: "Screenshot submitted by the user",
 						}},
+					},
+				},
+			},
+			tempest.SeparatorComponent{
+				Type: tempest.SEPARATOR_COMPONENT_TYPE,
+			},
+			tempest.ContainerComponent{
+				Type: tempest.CONTAINER_COMPONENT_TYPE,
+				Components: []tempest.ContainerChildComponent{
+					tempest.TextDisplayComponent{
+						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
+						Content: fmt.Sprintf(passwordTicketMessage, user.Mention()),
 					},
 					tempest.TextDisplayComponent{
 						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,

@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -51,7 +51,7 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 
 	userID, err := utils.GetUserFromThread(itx)
 	// These errors are already handled in GetUserFromThread
-	if err != nil && (err == utils.ErrNotATicketThread || err != utils.ErrCantFetchChannel) {
+	if err != nil && (err != utils.ErrNotATicketThread && err != utils.ErrCantFetchChannel && err != utils.ErrHelperThread) {
 		// An error occurred that was not "not a ticket thread" or "no such thread"
 		return
 	}
@@ -60,6 +60,9 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 	case !noPing && err == nil:
 		message = "Hi <@" + userID.String() + ">!\n" + message
 		messageParams.AllowedMentions = &tempest.AllowedMentions{Users: []tempest.Snowflake{userID}}
+	case !noPing && err == utils.ErrHelperThread: // In helper thread, don't actually ping
+		message = "Hi `@ping-placeholder`!\n" + message
+		responseMsg = constants.COULD_NOT_FIND_USER_TO_PING
 	case !noPing:
 		log.Println("Error fetching user for thread:", err)
 		responseMsg = constants.COULD_NOT_FIND_USER_TO_PING
@@ -67,7 +70,7 @@ func sayCommandImpl(itx *tempest.CommandInteraction) {
 
 	messageParams.Content = message
 
-	_, err = utils.SendDiscordMessage(itx.Client, itx.ChannelID, messageParams, nil, true)
+	_, err = utils.SendDiscordMessage(itx.BaseClient, itx.ChannelID, messageParams, nil, true)
 	if err != nil {
 		itx.SendLinearReply("Error sending message to thread: "+err.Error(), true)
 		return

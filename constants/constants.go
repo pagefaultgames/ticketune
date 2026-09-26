@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
  *
@@ -15,11 +15,12 @@ import (
 )
 
 var (
-	HELPER_ROLE_ID                 tempest.Snowflake
-	TICKET_CHANNEL_ID              tempest.Snowflake
-	SUPPORT_CATEGORY_ID            tempest.Snowflake
-	BOT_TROUBLESHOOTING_CHANNEL_ID tempest.Snowflake
-	DISCORD_GUILD_ID               tempest.Snowflake
+	HELPER_ROLE_ID                 tempest.Snowflake // ID of the role that is allowed to help users with their support tickets
+	TICKET_CHANNEL_ID              tempest.Snowflake // ID of the channel where new ticket threads are created
+	SUPPORT_CATEGORY_ID            tempest.Snowflake // ID of the channel category under which the support ticket threads are created
+	BOT_TROUBLESHOOTING_CHANNEL_ID tempest.Snowflake // ID of the channel where users are directed to when they have issues with the bot itself
+	DISCORD_GUILD_ID               tempest.Snowflake // ID of the Discord guild (server) where the bot is running
+	HELPER_TEST_CHANNEL_ID         tempest.Snowflake // ID of the channel used for testing the bot's functionality, where no user is associated with the thread
 )
 
 // "I couldn't find a user associated with this thread in my database, so I can't ping them...."
@@ -53,5 +54,10 @@ func init() {
 	DISCORD_GUILD_ID, err = tempest.EnvToSnowflake("DISCORD_GUILD_ID")
 	if err != nil {
 		log.Fatal("failed to parse DISCORD_GUILD_ID variable to snowflake", err)
+	}
+
+	HELPER_TEST_CHANNEL_ID, err = tempest.EnvToSnowflake("HELPER_TEST_CHANNEL_ID")
+	if err != nil {
+		log.Fatal("failed to parse HELPER_TEST_CHANNEL_ID variable to snowflake", err)
 	}
 }

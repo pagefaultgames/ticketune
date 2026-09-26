@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
  *
@@ -11,6 +11,7 @@ package utils
 import (
 	"errors"
 
+	"github.com/pagefaultgames/ticketune/constants"
 	"github.com/pagefaultgames/ticketune/db"
 
 	"github.com/amatsagu/tempest"
@@ -18,12 +19,13 @@ import (
 
 var ErrNotATicketThread = errors.New("this command can only be used in a password ticket thread")
 var ErrCantFetchChannel = errors.New("could not fetch channel information")
+var ErrHelperThread = errors.New("Thread is the helper test thread and has no associated user")
 
 // Get the channel and user ID associated with a command interaction
 // Errors if the
 func GetUserFromThread(itx *tempest.CommandInteraction) (tempest.Snowflake, error) {
 	// If this is not a thread in the ticket channel, do nothing
-	channel, err := GetChannelFromID(itx.Client, itx.ChannelID)
+	channel, err := GetChannelFromID(itx.BaseClient, itx.ChannelID)
 	if err != nil {
 		itx.SendLinearReply("Error fetching channel information, likely because I'm be missing permissions for this channel.", true)
 		return tempest.Snowflake(0), err
@@ -32,6 +34,10 @@ func GetUserFromThread(itx *tempest.CommandInteraction) (tempest.Snowflake, erro
 	if !CheckIfPasswordTicketChannel(channel) {
 		itx.SendLinearReply("This command can only be used in a password ticket thread", true)
 		return tempest.Snowflake(0), ErrNotATicketThread
+	}
+
+	if channel.ID == constants.HELPER_TEST_CHANNEL_ID {
+		return tempest.Snowflake(0), ErrHelperThread
 	}
 
 	userID, err := db.Get().GetThreadUser(itx.ChannelID)

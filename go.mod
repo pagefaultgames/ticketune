@@ -4,10 +4,10 @@
 
 module github.com/pagefaultgames/ticketune
 
-go 1.26.0
+go 1.27
 
 require (
-	github.com/amatsagu/tempest v1.4.0 // direct
+	github.com/amatsagu/tempest v1.10.5 // direct
 	github.com/google/go-github/v74 v74.0.0 // direct
 	github.com/jferrl/go-githubauth v1.4.0 // direct
 	github.com/mattn/go-sqlite3 v1.14.32 // direct

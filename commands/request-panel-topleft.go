@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  * SPDX-FileContributor: patapancakes
  *
@@ -45,6 +45,8 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	switch {
 	case !noPing && err == nil:
 		msgContent = "Hi <@" + userID.String() + ">!\n" + requestPanelCommandMsg
+	case !noPing && err == utils.ErrHelperThread:
+		msgContent = "Hi `@ping-placeholder`!\n" + requestPanelCommandMsg
 	case !noPing:
 		log.Println("Error fetching user for thread:", err)
 		responseMsg = constants.COULD_NOT_FIND_USER_TO_PING
@@ -52,10 +54,10 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 
 	msg := tempest.Message{
 		Flags: tempest.IS_COMPONENTS_V2_MESSAGE_FLAG,
-		Components: []tempest.LayoutComponent{
+		Components: []tempest.MessageComponent{
 			tempest.ContainerComponent{
 				Type: tempest.CONTAINER_COMPONENT_TYPE,
-				Components: []tempest.AnyComponent{
+				Components: []tempest.ContainerChildComponent{
 					tempest.TextDisplayComponent{
 						Type:    tempest.TEXT_DISPLAY_COMPONENT_TYPE,
 						Content: msgContent,
@@ -74,7 +76,7 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 		},
 	}
 
-	_, err = itx.Client.SendMessage(
+	_, err = itx.BaseClient.SendMessage(
 		itx.ChannelID,
 		msg,
 		nil,

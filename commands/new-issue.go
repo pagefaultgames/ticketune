@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Pagefault Games
+ * SPDX-FileCopyrightText: 2025-2026 Pagefault Games
  * SPDX-FileContributor: SirzBenjie
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -18,6 +18,7 @@ import (
 	"github.com/amatsagu/tempest"
 	"github.com/google/go-github/v74/github"
 	githubClient "github.com/pagefaultgames/ticketune/github-client"
+	"github.com/pagefaultgames/ticketune/utils"
 )
 
 // Register the command (add this to your command registration logic)
@@ -84,7 +85,7 @@ func sendIssueModal(itx *tempest.CommandInteraction, prefillBody string) {
 	err := itx.SendModal(tempest.ResponseModalData{
 		CustomID: CreateIssueModalId,
 		Title:    "Create GitHub Issue",
-		Components: []tempest.LayoutComponent{
+		Components: []tempest.ModalComponent{
 			// Can have at most 5 components.
 			tempest.LabelComponent{
 				Type:        tempest.LABEL_COMPONENT_TYPE,
@@ -181,25 +182,6 @@ func newIssueCommand(itx *tempest.CommandInteraction) {
 	sendIssueModal(itx, prefillBody)
 }
 
-// Helper function to extract the component from a modal response's label
-// Returns the component if found, (otherwise the zero value)
-func getLabelComponent[T tempest.StringSelectComponent | tempest.TextInputComponent](itx tempest.ModalInteraction, expectedIndex int) T {
-	var zero T
-	if len(itx.Data.Components) <= expectedIndex {
-		return zero
-	}
-	label, ok := itx.Data.Components[expectedIndex].(tempest.LabelComponent)
-	if !ok {
-		return zero
-	}
-	// Get the child component
-	component, ok := label.Component.(T)
-	if !ok {
-		return zero
-	}
-	return component
-}
-
 // Error indicating that the issue creation request timed out
 var ErrIssueTimeout = errors.New("issue creation timed out")
 
@@ -209,7 +191,8 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 		_ = mitx.AcknowledgeWithLinearMessage("Error: Unable to identify user", true)
 		return
 	}
-	title := getLabelComponent[tempest.TextInputComponent](mitx, 0).Value
+	modalData := &mitx.Data
+	title := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 0).Value
 	if title == "" {
 		mitx.AcknowledgeWithLinearMessage("Error: Unable to find issue title", true)
 		return
@@ -217,10 +200,10 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 		title = "[Bug] " + strings.TrimSpace(title)
 	}
 
-	issueLabels := getLabelComponent[tempest.StringSelectComponent](mitx, 1).Values
+	issueLabels := utils.GetLabelComponent[tempest.StringSelectComponent](modalData, 1).Values
 	issueLabels = append([]string{"Triage"}, issueLabels...)
 
-	description := getLabelComponent[tempest.TextInputComponent](mitx, 2).Value
+	description := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 2).Value
 
 	// description is required, so this should never happen unless discord is broken
 	if description == "" {
@@ -228,13 +211,13 @@ func HandleNewIssueModal(mitx tempest.ModalInteraction) {
 		return
 	}
 
-	stepsComponent := getLabelComponent[tempest.TextInputComponent](mitx, 3)
+	stepsComponent := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 3)
 	steps := stepsComponent.Value
 	if steps == "" {
 		steps = "_No response_"
 	}
 
-	additionalContext := getLabelComponent[tempest.TextInputComponent](mitx, 4).Value
+	additionalContext := utils.GetLabelComponent[tempest.TextInputComponent](modalData, 4).Value
 	if additionalContext == "" {
 		steps = "_No response_"
 	}

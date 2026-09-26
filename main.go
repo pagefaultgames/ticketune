@@ -65,6 +65,10 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to register new issue modal handler", err)
 	}
+	err = client.RegisterModal(commands.NewPasswordSupportTicketModalId, commands.HandleNewPasswordModal)
+	if err != nil {
+		log.Fatal("failed to register password help modal handler", err)
+	}
 	client.RegisterCommand(commands.TechIssuesCommand)
 	client.RegisterCommand(commands.PingSpamCommand)
 	client.RegisterCommand(commands.HowResetPwCommand)
