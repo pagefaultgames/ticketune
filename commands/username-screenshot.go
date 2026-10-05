@@ -25,6 +25,7 @@ var UsernameScreenshotCommmand = tempest.Command{
 	Name:                "username-screenshot",
 	Description:         usernameScreenshotDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, usernameScreenshotMessage, "The user has been requested to check for any screenshot or .prsv file where their username can appear.")
 	},

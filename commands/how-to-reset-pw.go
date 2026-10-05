@@ -24,7 +24,7 @@ var HowResetPwCommand = tempest.Command{
 	Name:                "how-to-reset-pw",
 	Description:         howResetPwDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, howResetPwMessage, "The user has been explain how to change their password.")
 	},

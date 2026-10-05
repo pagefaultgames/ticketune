@@ -27,7 +27,7 @@ var RequestPanelCommand = tempest.Command{
 	Name:                "request-panel-topleft",
 	Description:         requestPanelCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: requestPanelCommandImpl,
 	Contexts:            []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
@@ -35,7 +35,7 @@ var RequestPanelCommand = tempest.Command{
 func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
 	userID, err := utils.GetUserFromThread(itx)
-	if err != sql.ErrNoRows && err != nil {
+	if err != sql.ErrNoRows && err != utils.ErrHelperThread && err != nil {
 		return
 	}
 	responseMsg := "The user has been reminded to provide a screenshot with the usernames panel open."
@@ -74,6 +74,22 @@ func requestPanelCommandImpl(itx *tempest.CommandInteraction) {
 				},
 			},
 		},
+	}
+
+	ephemeral, err := utils.GetOption[bool](itx, "preview", false)
+	if err != nil {
+		log.Println("Error fetching preview option:", err)
+		ephemeral = false
+	}
+
+	// Ephemeral responses for helper testing purposes
+	if ephemeral {
+		err := itx.SendReply(tempest.ResponseMessageData{Flags: msg.Flags, Components: msg.Components}, true, nil)
+		if err != nil {
+			log.Println("Error sending ephemeral reply:", err)
+			itx.SendLinearReply("Something went wrong...", true)
+		}
+		return
 	}
 
 	_, err = itx.BaseClient.SendMessage(

@@ -26,7 +26,8 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 ) {
 	// Get the user associated with this thread (this handles responding to the interaction on error)
 	userID, err := GetUserFromThread(itx)
-	if err != sql.ErrNoRows && err != nil {
+	if err != sql.ErrNoRows && err != ErrHelperThread && err != nil {
+		log.Printf("Error fetching user for thread: %v", err)
 		return
 	}
 
@@ -45,6 +46,16 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 		invokerResponse = constants.COULD_NOT_FIND_USER_TO_PING
 	}
 
+	ephemeral, err := GetOption[bool](itx, "preview", false)
+	if err != nil {
+		ephemeral = false
+	}
+
+	// Ephemeral responses for helper testing purposes
+	if ephemeral {
+		itx.SendLinearReply("This is what would have been sent to the user:\n\n"+content, true)
+		return
+	}
 	// Send the user a message
 	_, err = itx.BaseClient.SendLinearMessage(
 		itx.ChannelID,
@@ -55,5 +66,5 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 		return
 	}
 
-	itx.SendLinearReply(invokerResponse, true)
+	itx.SendLinearReply(invokerResponse, ephemeral)
 }

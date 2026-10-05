@@ -21,7 +21,7 @@ var WhichAccountCommand = tempest.Command{
 	Name:                "which-account",
 	Description:         whichAccountCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, whichAccountMessage, "The user has been asked which account they need help with.")
 	},

@@ -25,6 +25,7 @@ var PingSpamCommand = tempest.Command{
 	Name:                "ping-spam",
 	Description:         pingSpamCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, pingSpamMessage, "The user has been asked to stop ping abuse.")
 	},

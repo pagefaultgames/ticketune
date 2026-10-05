@@ -17,18 +17,18 @@ import (
 const noSaveCommandDescription = "Ping and ask the user to try to login on a different browser or device they may have also played on"
 const tryDifferentBrowserMessage = "If there is another device or browser you've played on before, please __try to use the gear there__.\n" +
 	"Otherwise, please provide:\n" +
-        " - The username of the account you want to recover\n" +
-        " - To the best of your memory:\n" +
-        "  - The month and year of account creation\n" +
-        "  -  The month and year you played for the last time on this account\n" +
-        "-# Played for the last time = when you most recently started any kind of run\n" +
-        " - Any information regarding game stats and/or the progress of your Pokédex."
+	" - The username of the account you want to recover\n" +
+	" - To the best of your memory:\n" +
+	"  - The month and year of account creation\n" +
+	"  -  The month and year you played for the last time on this account\n" +
+	"-# Played for the last time = when you most recently started any kind of run\n" +
+	" - Any information regarding game stats and/or the progress of your Pokédex."
 
 var NoSaveCommmand = tempest.Command{
 	Name:                "no-save",
 	Description:         noSaveCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, tryDifferentBrowserMessage, "The user has been requested to try to login on a different browser or device.")
 	},

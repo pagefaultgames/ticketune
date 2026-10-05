@@ -29,7 +29,7 @@ var SaveAccessCommmand = tempest.Command{
 	Name:                "save-access",
 	Description:         saveAccessDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, saveAccessMessage, "The user has been informed about what Helpers can check about their saves.")
 	},

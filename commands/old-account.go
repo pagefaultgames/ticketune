@@ -40,6 +40,7 @@ var OldAccountDefault = tempest.Command{
 			MaxLength:   64,
 		},
 		NO_PING_OPTION,
+		PREVIEW_OPTION,
 	},
 	Contexts: []tempest.InteractionContextType{tempest.GUILD_CONTEXT_TYPE},
 }
@@ -77,6 +78,7 @@ var OldAccountSpecific = tempest.Command{
 			Required:    false,
 		},
 		NO_PING_OPTION,
+		PREVIEW_OPTION,
 	},
 }
 

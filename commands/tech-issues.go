@@ -25,7 +25,7 @@ var TechIssuesCommand = tempest.Command{
 	Name:                "tech-issues",
 	Description:         techIssuesCommandDescription,
 	RequiredPermissions: tempest.ADMINISTRATOR_PERMISSION_FLAG,
-	Options:             []tempest.CommandOption{NO_PING_OPTION},
+	Options:             []tempest.CommandOption{NO_PING_OPTION, PREVIEW_OPTION},
 	SlashCommandHandler: func(itx *tempest.CommandInteraction) {
 		utils.SayCommandTemplate(itx, techIssuesMessage, "The user has been warned about technical issues that prevent us from helping them.")
 	},

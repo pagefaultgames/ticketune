@@ -15,3 +15,10 @@ var NO_PING_OPTION = tempest.CommandOption{
 	Description: "Do not ping the user associated with this ticket. Defaults to false (ping the user).",
 	Required:    false,
 }
+
+var PREVIEW_OPTION = tempest.CommandOption{
+	Type:        tempest.BOOLEAN_OPTION_TYPE,
+	Name:        "preview",
+	Description: "Make the bot's response ephemeral (only visible to you). Used to preview output.",
+	Required:    false,
+}
