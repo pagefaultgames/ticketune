@@ -38,7 +38,7 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 	if err == nil && !noPing {
 		content = "Hi <@" + userID.String() + ">!\n" + content
 	} else if err == ErrHelperThread && !noPing {
-		content = "Hi <@" + userID.String() + ">!\n" + content
+		content = "Hi `@ping-placeholder`!\n" + content
 	}
 
 	if err != nil && !noPing && err != ErrHelperThread {
