@@ -66,5 +66,5 @@ func SayCommandTemplate(itx *tempest.CommandInteraction,
 		return
 	}
 
-	itx.SendLinearReply(invokerResponse, ephemeral)
+	itx.SendLinearReply(invokerResponse, true)
 }
